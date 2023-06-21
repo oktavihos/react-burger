@@ -10,12 +10,14 @@ const BurgerConstructor = ({data = [], categories = []}: TBurgerConstructorProps
     const observer = useRef<IntersectionObserver|null>(null);
 
     useEffect(() => {
-        observer.current = new IntersectionObserver(entries => {
-            const visibleSection = entries.find((entry) => entry.isIntersecting)?.target;
-            if(visibleSection) setCurrent(visibleSection.id);
-        });
+        const root = document.getElementById('scroll-sections');
 
-        const sections = document.querySelector('#scroll-sections')?.querySelectorAll('h2');
+        observer.current = new IntersectionObserver(entries => {
+            const visibleSection = entries.find(entry => entry.isIntersecting)?.target;
+            if(visibleSection) setCurrent(visibleSection.id);
+        }, {root: root, rootMargin: '0px 0px -80% 0px', threshold: 1.0});
+
+        const sections = root?.querySelectorAll('h2');
         if(sections) sections.forEach(section => observer.current?.observe(section));
 
         return () => {
@@ -63,11 +65,8 @@ const BurgerConstructor = ({data = [], categories = []}: TBurgerConstructorProps
     );
 
     function handleScrollSpy(value: string){
-        const block = document.getElementById('scroll-sections');
-        if(block){
-            const element = block.querySelector(`h2#${value}`);
-            if(element) element.scrollIntoView({behavior: "smooth"});
-        }
+        const element = document.getElementById('scroll-sections')?.querySelector(`[id="${value}"]`);
+        if(element) element.scrollIntoView({behavior: "smooth"});
     }
 }
 
