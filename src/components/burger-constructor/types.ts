@@ -1,5 +1,6 @@
 export type TBurgerConstructorProps = {
-    data?: TBurgerData[]
+    data?: TBurgerData[],
+    categories?: TCategoriesItem[]
 };
 
 export type TBurgerData = {
@@ -15,4 +16,13 @@ export type TBurgerData = {
     image_mobile: string,
     image_large: string,
     __v: number
+};
+
+export type TCategoriesData = {
+    items: TBurgerData[]
+} & TCategoriesItem;
+
+export type TCategoriesItem = {
+    title: string,
+    type: string
 };

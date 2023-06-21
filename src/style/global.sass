@@ -1,4 +1,6 @@
-@import url(./variables.sass)
+@import variables.sass
+@import mixin.sass
+@import fonts.sass
 
 .btn_icon
     display: inline-flex
@@ -14,3 +16,13 @@
         color: var(--text-primary-color)
         svg
             fill: var(--text-primary-color)
+.scroll
+    @include scrollbars(8px, var(--text-inactive-color), var(--background-element))
+    overflow-y: auto
+#root
+    display: flex
+    flex-direction: column
+    height: 100vh
+    overflow: hidden
+    align-items: center
+    width: 100%
