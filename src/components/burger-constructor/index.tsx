@@ -24,7 +24,7 @@ const BurgerConstructor = ({data = []}: TBurgerConstructorProps) => {
         <>
             <div className="mb-25" style={{ display: 'flex', flexDirection: 'column', gap: '10px', minHeight: 0 }}>
                 {bun && <ConstructorElement
-                    extraClass="ml-8"
+                    extraClass="ml-7"
                     type="top"
                     isLocked={true}
                     text={`${bun.name} (верх)`}
@@ -37,6 +37,7 @@ const BurgerConstructor = ({data = []}: TBurgerConstructorProps) => {
                             <div key={index} className={constructorStyle.dragItem}>
                                 <DragIcon type="primary" />
                                 <ConstructorElement
+                                    extraClass="ml-1"
                                     text={item.name}
                                     price={item.price}
                                     thumbnail={item.image_large}
@@ -46,7 +47,7 @@ const BurgerConstructor = ({data = []}: TBurgerConstructorProps) => {
                     })}
                 </div>
                 {bun && <ConstructorElement
-                    extraClass="ml-8"
+                    extraClass="ml-7"
                     type="bottom"
                     isLocked={true}
                     text={`${bun.name} (низ)`}
