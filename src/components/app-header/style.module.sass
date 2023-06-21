@@ -1,13 +1,16 @@
 .header
+    width: 100%
+    background: var(--background)
+.headerWrapper
     display: flex
     align-items: center
     justify-content: space-between
     max-width: var(--container-width)
-    width: 100%
+    margin: 0 auto
 .headerLeft
-    width: 30%
+    width: calc(50% - 150px)
 .headerRight
-    width: 30%
+    composes: headerLeft
     text-align: right
 .logo
     display: flex

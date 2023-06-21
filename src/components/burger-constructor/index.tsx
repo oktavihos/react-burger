@@ -1,73 +1,68 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
-import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { TBurgerConstructorProps, TCategoriesData } from './types';
-import BurgerCategory from './components/burger-category';
-import BurgerElement from './components/burger-element';
+import { Button, ConstructorElement, CurrencyIcon, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import { TBurgerConstructorProps } from "./types";
+import { useMemo } from "react";
+import { TBurgerData } from "../app/types";
+import constructorStyle from './style.module.sass';
 
-const BurgerConstructor = ({data = [], categories = []}: TBurgerConstructorProps) => {
+const BurgerConstructor = ({data = []}: TBurgerConstructorProps) => {
 
-    const [current, setCurrent] = useState<string>(categories[0].type);
-    const observer = useRef<IntersectionObserver|null>(null);
+    const [bun, other, sum] = useMemo<[TBurgerData | null, TBurgerData[], number]>(() => {
+        let bun: TBurgerData | null = null;
+        let other: TBurgerData[] = [];
+        let sum: number = 0;
 
-    useEffect(() => {
-        const root = document.getElementById('scroll-sections');
-
-        observer.current = new IntersectionObserver(entries => {
-            const visibleSection = entries.find(entry => entry.isIntersecting)?.target;
-            if(visibleSection) setCurrent(visibleSection.id);
-        }, {root: root, rootMargin: '0px 0px -80% 0px', threshold: 1.0});
-
-        const sections = root?.querySelectorAll('h2');
-        if(sections) sections.forEach(section => observer.current?.observe(section));
-
-        return () => {
-            if(sections) sections.forEach((section) => {
-              observer.current?.unobserve(section);
-            });
-        };
-
-    }, []);
-
-    const categoriesData: TCategoriesData[] = useMemo(() => {
-        let result: TCategoriesData[] = [];
-        categories.forEach(category => {
-            result.push({
-                title: category.title,
-                type: category.type,
-                items: data.filter(item => item.type === category.type)
-            });
+        data.forEach(item => {
+            if(item.type === 'bun') bun = item;
+            else other.push(item);
+            sum += item.price;
         });
-        return result;
-    }, [data, categories]);
+
+        return [bun, other, sum];
+    }, [data]);
 
     return (
         <>
-            <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
-            <div style={{ display: 'flex' }} className='mb-10'>
-                {categories.map(category => {
-                    return (
-                        <Tab key={category.type} value={category.type} active={current === category.type} onClick={handleScrollSpy}>
-                            {category.title}
-                        </Tab>
-                    );
-                })}
+            <div className="mb-25" style={{ display: 'flex', flexDirection: 'column', gap: '10px', minHeight: 0 }}>
+                {bun && <ConstructorElement
+                    extraClass="ml-8"
+                    type="top"
+                    isLocked={true}
+                    text={`${bun.name} (верх)`}
+                    price={bun.price}
+                    thumbnail={bun.image_large}
+                />}
+                <div className="scroll scroll-view" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {other.map((item, index) => {
+                        return (
+                            <div key={index} className={constructorStyle.dragItem}>
+                                <DragIcon type="primary" />
+                                <ConstructorElement
+                                    text={item.name}
+                                    price={item.price}
+                                    thumbnail={item.image_large}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+                {bun && <ConstructorElement
+                    extraClass="ml-8"
+                    type="bottom"
+                    isLocked={true}
+                    text={`${bun.name} (низ)`}
+                    price={bun.price}
+                    thumbnail={bun.image_large}
+                />}
             </div>
-            <div id="scroll-sections" className="scroll mb-10">
-                {categoriesData.map(categoryData => {
-                    return (
-                        <BurgerCategory key={categoryData.type} title={categoryData.title} type={categoryData.type}>
-                            {categoryData.items.map(item => <BurgerElement key={item._id} data={item} />)}
-                        </BurgerCategory>
-                    );
-                })}
+            <div className={constructorStyle.total}>
+                    <span className={`${constructorStyle.price} text text_type_digits-medium`}>{sum}</span>
+                    <CurrencyIcon type="primary" />
+                    <Button extraClass="ml-10" htmlType="button" type="primary" size="medium">
+                        Оформить заказ
+                    </Button>
             </div>
         </>
     );
-
-    function handleScrollSpy(value: string){
-        const element = document.getElementById('scroll-sections')?.querySelector(`[id="${value}"]`);
-        if(element) element.scrollIntoView({behavior: "smooth"});
-    }
 }
 
 export default BurgerConstructor;

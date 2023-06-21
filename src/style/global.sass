@@ -19,6 +19,8 @@
 .scroll
     @include scrollbars(8px, var(--text-inactive-color), var(--background-element))
     overflow-y: auto
+    &.scroll-view
+        overflow-y: scroll
 #root
     display: flex
     flex-direction: column
