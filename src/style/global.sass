@@ -1,0 +1,16 @@
+@import url(./variables.sass)
+
+.btn_icon
+    display: inline-flex
+    align-items: center
+    text-decoration: none
+    transition: color .2s
+    font-family: 'Jet Brains Mono'
+    svg
+        transition: fill .2s
+.btn_icon_primary
+    color: var(--text-inactive-color)
+    &:hover, &.active
+        color: var(--text-primary-color)
+        svg
+            fill: var(--text-primary-color)
