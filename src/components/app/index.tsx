@@ -1,6 +1,6 @@
 import AppHeader from "../app-header";
 import BurgerConstructor from "../burger-constructor";
-import BurgerIngridients from "../burger-ingridients";
+import BurgerIngridients from "../burger-ingredients";
 import appStyle from './style.module.sass';
 import burgerData from '../../utils/data.json';
 import burgerCategories from '../../utils/categories.json';
