@@ -5,7 +5,7 @@ import BurgerCategory from './components/burger-category';
 import BurgerElement from './components/burger-element';
 import ingridientsStyle from './style.module.sass';
 
-const BurgerIngridients: React.FC<TBurgerIngridientsProps> = ({data = [], categories = []}) => {
+const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = [], categories = []}) => {
 
     const [current, setCurrent] = useState<string>(categories[0].type);
     const observer = useRef<IntersectionObserver | null>(null);
@@ -77,4 +77,4 @@ const BurgerIngridients: React.FC<TBurgerIngridientsProps> = ({data = [], catego
     );
 }
 
-export default BurgerIngridients;
+export default BurgerIngredients;
