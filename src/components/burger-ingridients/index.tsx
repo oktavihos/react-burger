@@ -3,8 +3,9 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { TBurgerIngridientsProps, TCategoriesData } from './types';
 import BurgerCategory from './components/burger-category';
 import BurgerElement from './components/burger-element';
+import ingridientsStyle from './style.module.sass';
 
-const BurgerIngridients = ({data = [], categories = []}: TBurgerIngridientsProps) => {
+const BurgerIngridients: React.FC<TBurgerIngridientsProps> = ({data = [], categories = []}) => {
 
     const [current, setCurrent] = useState<string>(categories[0].type);
     const observer = useRef<IntersectionObserver | null>(null);
@@ -41,10 +42,20 @@ const BurgerIngridients = ({data = [], categories = []}: TBurgerIngridientsProps
         return result;
     }, [data, categories]);
 
+    
+
+    const setRefs = (ref: HTMLHeadingElement | null, index: number) => {
+        titleRef.current[index] = ref;
+    }
+
+    const handleScroll = (index: number) => {
+        titleRef.current[index]?.scrollIntoView({behavior: "smooth"});
+    }
+
     return (
         <>
             <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
-            <div style={{ display: 'flex' }} className='mb-10'>
+            <div className={`${ingridientsStyle.tabIngridients} mb-10`}>
                 {categories.map((category, index) => {
                     return (
                         <Tab key={category.type} value={category.type} active={current === category.type} onClick={() => handleScroll(index)}>
@@ -64,14 +75,6 @@ const BurgerIngridients = ({data = [], categories = []}: TBurgerIngridientsProps
             </div>
         </>
     );
-
-    function setRefs(ref: HTMLHeadingElement | null, index: number){
-        titleRef.current[index] = ref;
-    }
-
-    function handleScroll(index: number){
-        titleRef.current[index]?.scrollIntoView({behavior: "smooth"});
-    }
 }
 
 export default BurgerIngridients;

@@ -1,7 +1,7 @@
 import { TBurgerCategoryProps } from "./types";
 import categoryStyle from './style.module.sass';
 
-const BurgerCategory = ({title, type, children = undefined, titleRef = () => {}}: TBurgerCategoryProps) => {
+const BurgerCategory: React.FC<TBurgerCategoryProps> = ({title, type, children = undefined, titleRef = () => {}}) => {
     return (
         <>
             <h2 id={type} ref={titleRef} className="text text_type_main-large">{title}</h2>

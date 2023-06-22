@@ -1,10 +1,10 @@
 import { Button, ConstructorElement, CurrencyIcon, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { TBurgerConstructorProps } from "./types";
 import { useMemo } from "react";
-import { TBurgerData } from "../app/types";
+import { BurgerTypes, TBurgerData } from "../app/types";
 import constructorStyle from './style.module.sass';
 
-const BurgerConstructor = ({data = []}: TBurgerConstructorProps) => {
+const BurgerConstructor: React.FC<TBurgerConstructorProps> = ({data = []}) => {
 
     const [bun, other, sum] = useMemo<[TBurgerData | null, TBurgerData[], number]>(() => {
         let bun: TBurgerData | null = null;
@@ -12,7 +12,7 @@ const BurgerConstructor = ({data = []}: TBurgerConstructorProps) => {
         let sum: number = 0;
 
         data.forEach(item => {
-            if(item.type === 'bun') bun = item;
+            if(item.type === BurgerTypes.BUN) bun = item;
             else other.push(item);
             sum += item.price;
         });
@@ -22,16 +22,16 @@ const BurgerConstructor = ({data = []}: TBurgerConstructorProps) => {
 
     return (
         <>
-            <div className="mb-25" style={{ display: 'flex', flexDirection: 'column', gap: '10px', minHeight: 0 }}>
+            <div className={`${constructorStyle.currentList} mb-25`}>
                 {bun && <ConstructorElement
                     extraClass="ml-7"
                     type="top"
-                    isLocked={true}
+                    isLocked
                     text={`${bun.name} (верх)`}
                     price={bun.price}
                     thumbnail={bun.image_large}
                 />}
-                <div className="scroll scroll-view" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div className={`${constructorStyle.scrollList} scroll scroll-view`}>
                     {other.map((item, index) => {
                         return (
                             <div key={index} className={constructorStyle.dragItem}>
@@ -49,7 +49,7 @@ const BurgerConstructor = ({data = []}: TBurgerConstructorProps) => {
                 {bun && <ConstructorElement
                     extraClass="ml-7"
                     type="bottom"
-                    isLocked={true}
+                    isLocked
                     text={`${bun.name} (низ)`}
                     price={bun.price}
                     thumbnail={bun.image_large}

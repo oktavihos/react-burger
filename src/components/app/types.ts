@@ -12,3 +12,9 @@ export type TBurgerData = {
     image_large: string,
     __v: number
 };
+
+export enum BurgerTypes {
+    BUN = 'bun',
+    MAIN = 'main',
+    SAUSES = 'sauses'
+};
