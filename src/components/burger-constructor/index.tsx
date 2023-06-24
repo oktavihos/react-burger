@@ -1,8 +1,9 @@
 import { Button, ConstructorElement, CurrencyIcon, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { TBurgerConstructorProps } from "./types";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { BurgerTypes, TBurgerData } from "../app/types";
 import constructorStyle from './style.module.sass';
+import OrderDetails from "../order-details";
 
 const BurgerConstructor: React.FC<TBurgerConstructorProps> = ({data = []}) => {
 
@@ -18,7 +19,13 @@ const BurgerConstructor: React.FC<TBurgerConstructorProps> = ({data = []}) => {
         });
 
         return [bun, other, sum];
-    }, [data]);
+    }, [JSON.stringify(data)]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const [open, setOpen] = useState(false);
+
+    const openHandle = useCallback(() => {
+        setOpen(!open);
+    }, [open, setOpen]);
 
     return (
         <>
@@ -29,7 +36,7 @@ const BurgerConstructor: React.FC<TBurgerConstructorProps> = ({data = []}) => {
                     isLocked
                     text={`${bun.name} (верх)`}
                     price={bun.price}
-                    thumbnail={bun.image_large}
+                    thumbnail={bun.image_mobile}
                 />}
                 <div className={`${constructorStyle.scrollList} scroll scroll-view`}>
                     {other.map((item, index) => {
@@ -40,7 +47,7 @@ const BurgerConstructor: React.FC<TBurgerConstructorProps> = ({data = []}) => {
                                     extraClass="ml-1"
                                     text={item.name}
                                     price={item.price}
-                                    thumbnail={item.image_large}
+                                    thumbnail={item.image_mobile}
                                 />
                             </div>
                         );
@@ -52,15 +59,16 @@ const BurgerConstructor: React.FC<TBurgerConstructorProps> = ({data = []}) => {
                     isLocked
                     text={`${bun.name} (низ)`}
                     price={bun.price}
-                    thumbnail={bun.image_large}
+                    thumbnail={bun.image_mobile}
                 />}
             </div>
             <div className={constructorStyle.total}>
-                    <span className={`${constructorStyle.price} text text_type_digits-medium`}>{sum}</span>
-                    <CurrencyIcon type="primary" />
-                    <Button extraClass="ml-10" htmlType="button" type="primary" size="medium">
-                        Оформить заказ
-                    </Button>
+                <OrderDetails open={open} openHandle={openHandle} />
+                <span className={`${constructorStyle.price} text text_type_digits-medium`}>{sum}</span>
+                <CurrencyIcon type="primary" />
+                <Button onClick={openHandle} extraClass="ml-10" htmlType="button" type="primary" size="medium">
+                    Оформить заказ
+                </Button>
             </div>
         </>
     );

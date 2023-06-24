@@ -1,27 +1,19 @@
 import { useCallback } from 'react';
 import * as Config from '../config/api';
 
-const useRequest = <T>(
-    method: string,
-    setLoading: (load: boolean) => void = () => {},
-    setErrors: (error: string) => void = () => {}
+const useRequest = (
+    method: string
 ) => {
-    const getData = useCallback(() => async () => {
-        setLoading(true);
-        let result: T = await fetch(`${Config.API_URL}${method}`)
+    const getData = useCallback(async () => {
+        return await fetch(`${Config.API_URL}${method}`)
             .then(response => response.json())
             .then(responseResult => {
                 if(responseResult.success) return responseResult.data;
                 else{
-                    return [];
+                    throw new Error("Произошла ошибка при отправке данных");
                 }
-            })
-            .catch(error => {});
-        setTimeout(() => { //DEMO
-            setLoading(false);
-        }, 800);
-        return result;
-    }, [method, setLoading]);
+            });
+    }, [method]);
 
     return getData;
 }

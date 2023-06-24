@@ -1,15 +1,17 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { TBurgerIngridientsProps, TCategoriesData } from './types';
+import { TBurgerIngridientsProps } from './types';
 import BurgerCategory from './components/burger-category';
 import BurgerElement from './components/burger-element';
 import ingridientsStyle from './style.module.sass';
+import { locCategories } from '../app/locale';
+import { BurgerTypes, TCategoriesData } from '../app/types';
 
-const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = [], categories = []}) => {
+const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = []}) => {
 
-    const [current, setCurrent] = useState<string>(categories[0].type);
+    const [current, setCurrent] = useState<string>(BurgerTypes.BUN);
     const observer = useRef<IntersectionObserver | null>(null);
-    const titleRef = useRef<(HTMLHeadingElement | null)[]>([])
+    const titleRef = useRef<(HTMLHeadingElement | null)[]>([]);
 
     useEffect(() => {
         const root = document.getElementById('scroll-sections');
@@ -32,15 +34,16 @@ const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = [], catego
 
     const categoriesData: TCategoriesData[] = useMemo(() => {
         let result: TCategoriesData[] = [];
-        categories.forEach(category => {
+        Object.keys(locCategories).forEach(type => {
+            let categoryTitle = locCategories[type];
             result.push({
-                title: category.title,
-                type: category.type,
-                items: data.filter(item => item.type === category.type)
+                title: categoryTitle,
+                type: type,
+                items: data.filter(item => item.type === type)
             });
         });
         return result;
-    }, [data, categories]);
+    }, [JSON.stringify(data)]); //eslint-disable-line react-hooks/exhaustive-deps
 
     
 
@@ -56,10 +59,10 @@ const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = [], catego
         <>
             <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
             <div className={`${ingridientsStyle.tabIngridients} mb-10`}>
-                {categories.map((category, index) => {
+                {Object.keys(locCategories).map((type, index) => {
                     return (
-                        <Tab key={category.type} value={category.type} active={current === category.type} onClick={() => handleScroll(index)}>
-                            {category.title}
+                        <Tab key={type} value={type} active={current === type} onClick={() => handleScroll(index)}>
+                            {locCategories[type]}
                         </Tab>
                     );
                 })}
