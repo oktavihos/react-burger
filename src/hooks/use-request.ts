@@ -6,7 +6,7 @@ const useRequest = (
 ) => {
     const getData = useCallback(async () => {
         return await fetch(`${Config.API_URL}${method}`)
-            .then(response => response.json())
+            .then(response => response.ok ? response.json() : response.json().then(error => Promise.reject(error)))
             .then(responseResult => {
                 if(responseResult.success) return responseResult.data;
                 else{

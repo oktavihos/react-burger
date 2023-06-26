@@ -23,12 +23,13 @@ const BurgerConstructor: React.FC<TBurgerConstructorProps> = ({data = []}) => {
 
     const [open, setOpen] = useState(false);
 
-    const openHandle = useCallback(() => {
-        setOpen(!open);
-    }, [open, setOpen]);
+    const closeModalHandle = useCallback(() => {
+        setOpen(false);
+    }, [setOpen]);
 
     return (
         <>
+            {open && <OrderDetails closeModalHandle={closeModalHandle} />}
             <div className={`${constructorStyle.currentList} mb-25`}>
                 {bun && <ConstructorElement
                     extraClass="ml-7"
@@ -63,10 +64,9 @@ const BurgerConstructor: React.FC<TBurgerConstructorProps> = ({data = []}) => {
                 />}
             </div>
             <div className={constructorStyle.total}>
-                <OrderDetails open={open} openHandle={openHandle} />
                 <span className={`${constructorStyle.price} text text_type_digits-medium`}>{sum}</span>
                 <CurrencyIcon type="primary" />
-                <Button onClick={openHandle} extraClass="ml-10" htmlType="button" type="primary" size="medium">
+                <Button onClick={() => setOpen(true)} extraClass="ml-10" htmlType="button" type="primary" size="medium">
                     Оформить заказ
                 </Button>
             </div>

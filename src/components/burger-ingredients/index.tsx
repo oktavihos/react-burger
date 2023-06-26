@@ -1,17 +1,19 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { TBurgerIngridientsProps } from './types';
 import BurgerCategory from './components/burger-category';
 import BurgerElement from './components/burger-element';
 import ingridientsStyle from './style.module.sass';
 import { locCategories } from '../app/locale';
-import { BurgerTypes, TCategoriesData } from '../app/types';
+import { BurgerTypes, TBurgerData, TCategoriesData } from '../app/types';
+import IngredientsDetail from './components/ingredients-detail';
 
 const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = []}) => {
 
     const [current, setCurrent] = useState<string>(BurgerTypes.BUN);
     const observer = useRef<IntersectionObserver | null>(null);
     const titleRef = useRef<(HTMLHeadingElement | null)[]>([]);
+    const [selectData, setSelectData] = useState<TBurgerData|null>(null);
 
     useEffect(() => {
         const root = document.getElementById('scroll-sections');
@@ -31,6 +33,14 @@ const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = []}) => {
         };
 
     }, []);
+
+    const closeModalHandle = useCallback(() => {
+        setSelectData(null);
+    }, [setSelectData]);
+
+    const openModalHandle = useCallback((data: TBurgerData) => {
+        setSelectData(data);
+    }, [setSelectData]);
 
     const categoriesData: TCategoriesData[] = useMemo(() => {
         let result: TCategoriesData[] = [];
@@ -57,6 +67,7 @@ const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = []}) => {
 
     return (
         <>
+            {selectData && <IngredientsDetail data={selectData} closeModalHandle={closeModalHandle} />}
             <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
             <div className={`${ingridientsStyle.tabIngridients} mb-10`}>
                 {Object.keys(locCategories).map((type, index) => {
@@ -71,7 +82,7 @@ const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = []}) => {
                 {categoriesData.map((categoryData, index) => {
                     return (
                         <BurgerCategory titleRef={(ref) => setRefs(ref, index)} key={categoryData.type} title={categoryData.title} type={categoryData.type}>
-                            {categoryData.items.map(item => <BurgerElement key={item._id} data={item} />)}
+                            {categoryData.items.map(item => <BurgerElement selectHandle={openModalHandle} key={item._id} data={item} />)}
                         </BurgerCategory>
                     );
                 })}

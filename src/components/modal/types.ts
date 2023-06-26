@@ -1,7 +1,6 @@
 export type TModalProps = {
     children?: React.ReactElement | React.ReactElement[],
-    open?: boolean,
     title?: string,
-    openHandle?: () => void,
+    closeModalHandle?: () => void,
     extraClass?: string
 };

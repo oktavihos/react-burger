@@ -1,20 +1,12 @@
 import { TBurgerElementProps } from "./types";
 import elementStyle from './style.module.sass';
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useCallback, useState } from "react";
-import IngredientsDetail from "../ingredients-detail";
+import React from "react";
 
-const BurgerElement: React.FC<TBurgerElementProps> = ({data}) => {
-
-    const [open, setOpen] = useState<boolean>(false);
-    const openHandle = useCallback(() => {
-        setOpen(!open)
-    }, [setOpen, open]);
-
+const BurgerElement: React.FC<TBurgerElementProps> = React.memo(({data, selectHandle = () => {}}) => {
     return (
         <>
-            <IngredientsDetail data={data} open={open} openHandle={openHandle} />
-            <div className={`${elementStyle.card}`} onClick={() => openHandle()}>
+            <div className={`${elementStyle.card}`} onClick={() => selectHandle(data)}>
                 <Counter count={1} size="default" extraClass="m-1" />
                 <div className="pl-4 pr-4"><img alt={data.name} src={data.image} /></div>
                 <div className={`${elementStyle.price} mt-1 mb-1`}>
@@ -25,6 +17,6 @@ const BurgerElement: React.FC<TBurgerElementProps> = ({data}) => {
             </div>
         </>
     );
-}
+});
 
 export default BurgerElement;
