@@ -1,31 +1,38 @@
 import { Button, ConstructorElement, CurrencyIcon, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { TBurgerConstructorProps } from "./types";
-import { useCallback, useMemo, useState } from "react";
-import { BurgerTypes, TBurgerData } from "../app/types";
+import { useCallback, useMemo, useState, useContext } from "react";
+import { BurgerActionTypes, BurgerTypes, TBurgerDataConstructor } from "../app/types";
 import constructorStyle from './style.module.sass';
 import OrderDetails from "../order-details";
+import { BurgerContext } from "../services/app-context";
 
-const BurgerConstructor: React.FC<TBurgerConstructorProps> = ({data = []}) => {
+const BurgerConstructor: React.FC = () => {
 
-    const [bun, other, sum] = useMemo<[TBurgerData | null, TBurgerData[], number]>(() => {
-        let bun: TBurgerData | null = null;
-        let other: TBurgerData[] = [];
+    const { burgerState, burgerDispatch } = useContext(BurgerContext);
+
+    const [bun, other, sum] = useMemo<[TBurgerDataConstructor | null, TBurgerDataConstructor[], number]>(() => {
+        let bun: TBurgerDataConstructor | null = null;
+        let other: TBurgerDataConstructor[] = [];
         let sum: number = 0;
 
-        data.forEach(item => {
+        burgerState?.constructor.forEach(item => {
             if(item.type === BurgerTypes.BUN) bun = item;
             else other.push(item);
             sum += item.price;
         });
 
         return [bun, other, sum];
-    }, [JSON.stringify(data)]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(burgerState)]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const [open, setOpen] = useState(false);
 
     const closeModalHandle = useCallback(() => {
         setOpen(false);
     }, [setOpen]);
+
+    const deleteItemHandle = (guid: number) => {
+        let removeIndex = burgerState?.constructor.findIndex(item => item.guid === guid);
+        if(burgerDispatch && removeIndex && removeIndex > -1) burgerDispatch({type: BurgerActionTypes.CONSTRUCTOR_DELETE, payload: removeIndex})
+    }
 
     return (
         <>
@@ -42,13 +49,14 @@ const BurgerConstructor: React.FC<TBurgerConstructorProps> = ({data = []}) => {
                 <div className={`${constructorStyle.scrollList} scroll scroll-view`}>
                     {other.map((item, index) => {
                         return (
-                            <div key={index} className={constructorStyle.dragItem}>
+                            <div key={item.guid} className={constructorStyle.dragItem}>
                                 <DragIcon type="primary" />
                                 <ConstructorElement
                                     extraClass="ml-1"
                                     text={item.name}
                                     price={item.price}
                                     thumbnail={item.image_mobile}
+                                    handleClose={() => deleteItemHandle(item.guid)}
                                 />
                             </div>
                         );
