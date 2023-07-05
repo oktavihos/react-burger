@@ -2,22 +2,29 @@ import { TBurgerElementProps } from "./types";
 import elementStyle from './style.module.sass';
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 import React, { useContext } from "react";
-import { BurgerActionTypes } from "../../../app/types";
-import { BurgerContext } from "../../../services/app-context";
+import { BurgerConstructorContext } from "../../../../services/burger-constructor-context";
+import { ConstructorActionTypes } from "../../../../store/burger-constructor/types";
+import { BurgerIngredientsContext } from "../../../../services/burger-ingredients-context";
+import { v4 as uuidv4 } from 'uuid';
+import { IngredientsActionTypes } from "../../../../store/burger-ingredients/types";
 
 const BurgerElement: React.FC<TBurgerElementProps> = React.memo(({data, selectHandle = () => {}}) => {
 
-    const { burgerDispatch } = useContext(BurgerContext);
+    const { constructorDispatch } = useContext(BurgerConstructorContext);
+    const { ingredientsDispatch } = useContext(BurgerIngredientsContext);
 
     const addIngredientdHandle = () => {
-        if(burgerDispatch) burgerDispatch({type: BurgerActionTypes.CONSTRUCTOR_ADD, payload: {...data, guid: Date.now() + Math.random()}});
+        if(constructorDispatch) constructorDispatch({type: ConstructorActionTypes.ADD_INGREDIENT, payload: {...data, guid: uuidv4()}});
+        if(ingredientsDispatch){
+            ingredientsDispatch({type: IngredientsActionTypes.INCREMENT, payload: data._id})
+        }
         selectHandle(data)
     }
 
     return (
         <>
             <div className={`${elementStyle.card}`} onClick={() => addIngredientdHandle()}>
-                {data.count && <Counter count={data.count} size="default" extraClass="m-1" />}
+                {data.count ? <Counter count={data.count} size="default" extraClass="m-1" /> : undefined}
                 <div className="pl-4 pr-4"><img alt={data.name} src={data.image} /></div>
                 <div className={`${elementStyle.price} mt-1 mb-1`}>
                     <span className="text text_type_digits-default">{data.price}</span>

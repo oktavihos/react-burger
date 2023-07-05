@@ -1,4 +1,4 @@
-import { BurgerTypes, TCategoriesItem } from "./types";
+import { BurgerTypes, TCategoriesItem } from "../app/types";
 
 export const locCategories: TCategoriesItem = {
     [BurgerTypes.BUN.toString()]: 'Булки',

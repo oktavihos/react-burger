@@ -4,10 +4,10 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import BurgerCategory from './components/burger-category';
 import BurgerElement from './components/burger-element';
 import ingridientsStyle from './style.module.sass';
-import { locCategories } from '../app/locale';
+import { locCategories } from './locale';
 import { BurgerTypes, TBurgerData, TCategoriesData } from '../app/types';
 import IngredientsDetail from './components/ingredients-detail';
-import { BurgerContext } from '../services/app-context';
+import { BurgerIngredientsContext } from '../../services/burger-ingredients-context';
 
 const BurgerIngredients: React.FC = () => {
 
@@ -16,7 +16,7 @@ const BurgerIngredients: React.FC = () => {
     const titleRef = useRef<(HTMLHeadingElement | null)[]>([]);
     const [selectData, setSelectData] = useState<TBurgerData|null>(null);
 
-    const { burgerState } = useContext(BurgerContext);
+    const { ingredientsState } = useContext(BurgerIngredientsContext);
 
     useEffect(() => {
         const root = document.getElementById('scroll-sections');
@@ -52,11 +52,11 @@ const BurgerIngredients: React.FC = () => {
             result.push({
                 title: categoryTitle,
                 type: type,
-                items: burgerState?.ingredients ? burgerState?.ingredients.filter(item => item.type === type) : []
+                items: ingredientsState?.ingredients ? ingredientsState?.ingredients.filter(item => item.type === type) : []
             });
         });
         return result;
-    }, [JSON.stringify(burgerState)]); //eslint-disable-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(ingredientsState)]); //eslint-disable-line react-hooks/exhaustive-deps
 
     
 

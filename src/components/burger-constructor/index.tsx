@@ -1,27 +1,28 @@
 import { Button, ConstructorElement, CurrencyIcon, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useCallback, useMemo, useState, useContext } from "react";
-import { BurgerActionTypes, BurgerTypes, TBurgerDataConstructor } from "../app/types";
 import constructorStyle from './style.module.sass';
 import OrderDetails from "../order-details";
-import { BurgerContext } from "../services/app-context";
+import { BurgerConstructorContext } from "../../services/burger-constructor-context";
+import { ConstructorActionTypes } from "../../store/burger-constructor/types";
+import { BurgerIngredientsContext } from "../../services/burger-ingredients-context";
+import { IngredientsActionTypes } from "../../store/burger-ingredients/types";
 
 const BurgerConstructor: React.FC = () => {
 
-    const { burgerState, burgerDispatch } = useContext(BurgerContext);
+    const { constructorState, constructorDispatch } = useContext(BurgerConstructorContext);
+    const { ingredientsDispatch } = useContext(BurgerIngredientsContext);
 
-    const [bun, other, sum] = useMemo<[TBurgerDataConstructor | null, TBurgerDataConstructor[], number]>(() => {
-        let bun: TBurgerDataConstructor | null = null;
-        let other: TBurgerDataConstructor[] = [];
-        let sum: number = 0;
+    const total = useMemo<number>(() => {
+        let total: number = 0;
 
-        burgerState?.constructor.forEach(item => {
-            if(item.type === BurgerTypes.BUN) bun = item;
-            else other.push(item);
-            sum += item.price;
+        constructorState?.ingredients.forEach(item => {
+            total += item.price;
         });
 
-        return [bun, other, sum];
-    }, [JSON.stringify(burgerState)]); // eslint-disable-line react-hooks/exhaustive-deps
+        if(constructorState?.bun) total += constructorState.bun.price * 2;
+
+        return total;
+    }, [JSON.stringify(constructorState)]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const [open, setOpen] = useState(false);
 
@@ -29,25 +30,26 @@ const BurgerConstructor: React.FC = () => {
         setOpen(false);
     }, [setOpen]);
 
-    const deleteItemHandle = (guid: number) => {
-        let removeIndex = burgerState?.constructor.findIndex(item => item.guid === guid);
-        if(burgerDispatch && removeIndex && removeIndex > -1) burgerDispatch({type: BurgerActionTypes.CONSTRUCTOR_DELETE, payload: removeIndex})
+    const deleteItemHandle = (guid: string) => {
+        let data = constructorState?.ingredients.find(item => item.guid === guid);
+        if(constructorDispatch) constructorDispatch({type: ConstructorActionTypes.DELETE_INGREDIENT, payload: guid});
+        if(ingredientsDispatch && data) ingredientsDispatch({type: IngredientsActionTypes.DESCREMENT, payload: data._id})
     }
 
     return (
         <>
             {open && <OrderDetails closeModalHandle={closeModalHandle} />}
             <div className={`${constructorStyle.currentList} mb-25`}>
-                {bun && <ConstructorElement
+                {constructorState?.bun && <ConstructorElement
                     extraClass="ml-7"
                     type="top"
                     isLocked
-                    text={`${bun.name} (верх)`}
-                    price={bun.price}
-                    thumbnail={bun.image_mobile}
+                    text={`${constructorState.bun.name} (верх)`}
+                    price={constructorState.bun.price}
+                    thumbnail={constructorState.bun.image_mobile}
                 />}
                 <div className={`${constructorStyle.scrollList} scroll scroll-view`}>
-                    {other.map((item, index) => {
+                    {constructorState?.ingredients.map(item => {
                         return (
                             <div key={item.guid} className={constructorStyle.dragItem}>
                                 <DragIcon type="primary" />
@@ -62,17 +64,17 @@ const BurgerConstructor: React.FC = () => {
                         );
                     })}
                 </div>
-                {bun && <ConstructorElement
+                {constructorState?.bun && <ConstructorElement
                     extraClass="ml-7"
                     type="bottom"
                     isLocked
-                    text={`${bun.name} (низ)`}
-                    price={bun.price}
-                    thumbnail={bun.image_mobile}
+                    text={`${constructorState.bun.name} (низ)`}
+                    price={constructorState.bun.price}
+                    thumbnail={constructorState.bun.image_mobile}
                 />}
             </div>
             <div className={constructorStyle.total}>
-                <span className={`${constructorStyle.price} text text_type_digits-medium`}>{sum}</span>
+                <span className={`${constructorStyle.price} text text_type_digits-medium`}>{total}</span>
                 <CurrencyIcon type="primary" />
                 <Button onClick={() => setOpen(true)} extraClass="ml-10" htmlType="button" type="primary" size="medium">
                     Оформить заказ
