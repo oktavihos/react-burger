@@ -1,10 +1,14 @@
 import { BurgerTypes } from "../../components/app/types";
 import { IngredientsActionTypes, TIngredientsReducer, TIngredientsState } from "./types";
 
-export const ingredientsInitialState: TIngredientsState = {ingredients: []};
+export const ingredientsInitialState: TIngredientsState = {ingredients: [], selectIngredients: undefined};
 
 export const ingredientsReducer: TIngredientsReducer = (state, action) => {
     switch(action.type){
+        case IngredientsActionTypes.SELECT:
+            return {...state, selectIngredients: action.payload};
+        case IngredientsActionTypes.UNSELECT:
+            return {...state, selectIngredients: undefined};
         case IngredientsActionTypes.LOAD_INGREDIENTS:
             return {...state, ingredients: action.payload};
         case IngredientsActionTypes.INCREMENT:

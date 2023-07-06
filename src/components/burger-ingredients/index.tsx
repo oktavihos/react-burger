@@ -8,15 +8,15 @@ import { locCategories } from './locale';
 import { BurgerTypes, TBurgerData, TCategoriesData } from '../app/types';
 import IngredientsDetail from './components/ingredients-detail';
 import { BurgerIngredientsContext } from '../../services/burger-ingredients-context';
+import { IngredientsActionTypes } from '../../store/burger-ingredients/types';
 
 const BurgerIngredients: React.FC = () => {
 
     const [current, setCurrent] = useState<string>(BurgerTypes.BUN);
     const observer = useRef<IntersectionObserver | null>(null);
     const titleRef = useRef<(HTMLHeadingElement | null)[]>([]);
-    const [selectData, setSelectData] = useState<TBurgerData|null>(null);
 
-    const { ingredientsState } = useContext(BurgerIngredientsContext);
+    const { ingredientsState, ingredientsDispatch } = useContext(BurgerIngredientsContext);
 
     useEffect(() => {
         const root = document.getElementById('scroll-sections');
@@ -38,12 +38,12 @@ const BurgerIngredients: React.FC = () => {
     }, []);
 
     const closeModalHandle = useCallback(() => {
-        setSelectData(null);
-    }, [setSelectData]);
+        if(ingredientsDispatch) ingredientsDispatch({type: IngredientsActionTypes.UNSELECT});
+    }, [ingredientsDispatch]);
 
     const openModalHandle = useCallback((data: TBurgerData) => {
-        setSelectData(data);
-    }, [setSelectData]);
+        if(ingredientsDispatch) ingredientsDispatch({type: IngredientsActionTypes.SELECT, payload: data});
+    }, [ingredientsDispatch]);
 
     const categoriesData: TCategoriesData[] = useMemo(() => {
         let result: TCategoriesData[] = [];
@@ -70,7 +70,7 @@ const BurgerIngredients: React.FC = () => {
 
     return (
         <>
-            {selectData && <IngredientsDetail data={selectData} closeModalHandle={closeModalHandle} />}
+            {ingredientsState?.selectIngredients && <IngredientsDetail data={ingredientsState.selectIngredients} closeModalHandle={closeModalHandle} />}
             <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
             <div className={`${ingridientsStyle.tabIngridients} mb-10`}>
                 {Object.keys(locCategories).map((type, index) => {
