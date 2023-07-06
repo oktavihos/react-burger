@@ -33,7 +33,7 @@ const BurgerConstructor: React.FC = () => {
         }
 
         return [total, orderItems];
-    }, [JSON.stringify(constructorState)]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [constructorState]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const sendOrder = useRequest('orders', 'POST', orderItems);
 

@@ -56,7 +56,7 @@ const BurgerIngredients: React.FC = () => {
             });
         });
         return result;
-    }, [JSON.stringify(ingredientsState)]); //eslint-disable-line react-hooks/exhaustive-deps
+    }, [ingredientsState]); //eslint-disable-line react-hooks/exhaustive-deps
 
     
 
