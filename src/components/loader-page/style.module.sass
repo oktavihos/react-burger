@@ -5,23 +5,3 @@
     display: flex
     align-items: center
     justify-content: center
-    svg
-        fill: var(--colors-interface-accent)
-        circle
-            animation: size linear .4s, opacity linear .4s
-            animation-iteration-count: infinite
-            animation-direction: alternate
-            transform-origin: 50% 50%
-            opacity: 1
-            &:nth-child(2)
-                animation-delay: -.4s
-@keyframes size
-    0%
-        transform: scale(1)
-    100%
-        transform: scale(.6)
-@keyframes opacity
-    0%
-        opacity: 1
-    100%
-        opacity: .6

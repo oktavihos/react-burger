@@ -1,19 +1,22 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useContext } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { TBurgerIngridientsProps } from './types';
 import BurgerCategory from './components/burger-category';
 import BurgerElement from './components/burger-element';
 import ingridientsStyle from './style.module.sass';
-import { locCategories } from '../app/locale';
+import { locCategories } from './locale';
 import { BurgerTypes, TBurgerData, TCategoriesData } from '../app/types';
 import IngredientsDetail from './components/ingredients-detail';
+import { BurgerIngredientsContext } from '../../services/burger-ingredients-context';
+import { IngredientsActionTypes } from '../../store/burger-ingredients/types';
 
-const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = []}) => {
+const BurgerIngredients: React.FC = () => {
 
     const [current, setCurrent] = useState<string>(BurgerTypes.BUN);
     const observer = useRef<IntersectionObserver | null>(null);
     const titleRef = useRef<(HTMLHeadingElement | null)[]>([]);
-    const [selectData, setSelectData] = useState<TBurgerData|null>(null);
+
+    const { ingredientsState, ingredientsDispatch } = useContext(BurgerIngredientsContext);
 
     useEffect(() => {
         const root = document.getElementById('scroll-sections');
@@ -35,12 +38,12 @@ const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = []}) => {
     }, []);
 
     const closeModalHandle = useCallback(() => {
-        setSelectData(null);
-    }, [setSelectData]);
+        if(ingredientsDispatch) ingredientsDispatch({type: IngredientsActionTypes.UNSELECT});
+    }, [ingredientsDispatch]);
 
     const openModalHandle = useCallback((data: TBurgerData) => {
-        setSelectData(data);
-    }, [setSelectData]);
+        if(ingredientsDispatch) ingredientsDispatch({type: IngredientsActionTypes.SELECT, payload: data});
+    }, [ingredientsDispatch]);
 
     const categoriesData: TCategoriesData[] = useMemo(() => {
         let result: TCategoriesData[] = [];
@@ -49,11 +52,11 @@ const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = []}) => {
             result.push({
                 title: categoryTitle,
                 type: type,
-                items: data.filter(item => item.type === type)
+                items: ingredientsState?.ingredients ? ingredientsState?.ingredients.filter(item => item.type === type) : []
             });
         });
         return result;
-    }, [JSON.stringify(data)]); //eslint-disable-line react-hooks/exhaustive-deps
+    }, [ingredientsState]); //eslint-disable-line react-hooks/exhaustive-deps
 
     
 
@@ -67,7 +70,7 @@ const BurgerIngredients: React.FC<TBurgerIngridientsProps> = ({data = []}) => {
 
     return (
         <>
-            {selectData && <IngredientsDetail data={selectData} closeModalHandle={closeModalHandle} />}
+            {ingredientsState?.selectIngredients && <IngredientsDetail data={ingredientsState.selectIngredients} closeModalHandle={closeModalHandle} />}
             <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
             <div className={`${ingridientsStyle.tabIngridients} mb-10`}>
                 {Object.keys(locCategories).map((type, index) => {

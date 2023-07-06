@@ -1,5 +1,3 @@
-import { TBurgerData } from "../app/types";
-
-export type TBurgerConstructorProps = {
-    data?: TBurgerData[]
+export type TOrderItems = {
+    ingredients: string[]
 };
