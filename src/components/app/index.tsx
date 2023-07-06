@@ -26,8 +26,8 @@ const App: React.FC = () => {
 
     useEffect(() => {
         setLoading(true);
-        getIngredients().then(data => {
-            ingredientsDispatch({type: IngredientsActionTypes.LOAD_INGREDIENTS, payload: data});
+        getIngredients().then(result => {
+            ingredientsDispatch({type: IngredientsActionTypes.LOAD_INGREDIENTS, payload: result.data});
             setLoading(false);
         }).catch(error => {
             setErrors([error.toString()]);

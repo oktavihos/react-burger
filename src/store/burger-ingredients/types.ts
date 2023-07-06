@@ -10,6 +10,7 @@ export enum IngredientsActionTypes {
     LOAD_INGREDIENTS = 'LOAD_INGREDIENTS',
     INCREMENT = 'INCREMENT',
     DESCREMENT = 'DESCREMENT',
+    RESET = 'RESET',
 };
 
 interface IngredientsActionBase<T = IngredientsActionTypes>{
@@ -28,6 +29,10 @@ interface IngredientsActionCount extends IngredientsActionBase<
     payload: string
 };
 
-export type TIngredientsAction = IngredientsActionLoad | IngredientsActionCount;
+interface IngredientsActionOnlyType extends IngredientsActionBase<
+    IngredientsActionTypes.RESET
+> {};
+
+export type TIngredientsAction = IngredientsActionLoad | IngredientsActionCount | IngredientsActionOnlyType;
 
 export type TIngredientsReducer = (state: TIngredientsState, action: TIngredientsAction) => TIngredientsState;

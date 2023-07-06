@@ -15,6 +15,8 @@ export const constructorReducer: TConstructorReducer = (state, action) => {
             return {...state, ingredients: cloneIngredients};
         case ConstructorActionTypes.SORT_INGREDIENTS:
             return {...state};
+        case ConstructorActionTypes.RESET:
+            return constructorInitialState;
         default:
             return state;
     }

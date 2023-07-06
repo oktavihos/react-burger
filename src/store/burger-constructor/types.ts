@@ -10,7 +10,8 @@ export type TConstructorState = {
 export enum ConstructorActionTypes {
     ADD_INGREDIENT = 'ADD_INGREDIENT',
     DELETE_INGREDIENT = 'DELETE_INGREDIENT',
-    SORT_INGREDIENTS = 'SORT_INGREDIENTS'
+    SORT_INGREDIENTS = 'SORT_INGREDIENTS',
+    RESET = 'RESET',
 };
 
 interface ConstructorActionBase<T = ConstructorActionTypes>{
@@ -40,6 +41,10 @@ interface ConstructorActionDelete extends ConstructorActionBase<
     payload: string
 };
 
-export type TConstructorAction = ConstructorActionAdd | ConstructorActionSort | ConstructorActionDelete;
+interface ConstructorActionOneType extends ConstructorActionBase<
+    ConstructorActionTypes.RESET
+> {};
+
+export type TConstructorAction = ConstructorActionAdd | ConstructorActionSort | ConstructorActionDelete | ConstructorActionOneType;
 
 export type TConstructorReducer = (state: TConstructorState, action: TConstructorAction) => TConstructorState;

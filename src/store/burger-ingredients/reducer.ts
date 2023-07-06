@@ -30,6 +30,8 @@ export const ingredientsReducer: TIngredientsReducer = (state, action) => {
             cloneIngredients.splice(indexItem, 1, {...item, count: isBun ? 2 : (item?.count ?? 0) + count});
             
             return {...state, ingredients: cloneIngredients};
+        case IngredientsActionTypes.RESET:
+            return {...state, ingredients: state.ingredients.map(element => { return {...element, count: 0} })};
         default:
             return state;
     }
