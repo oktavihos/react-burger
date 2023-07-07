@@ -9,10 +9,7 @@ export const constructorReducer: TConstructorReducer = (state, action) => {
             if(action.payload.type === BurgerTypes.BUN) return {...state, bun: action.payload};
             else return {...state, ingredients: [...state.ingredients, action.payload]};
         case ConstructorActionTypes.DELETE_INGREDIENT:
-            let cloneIngredients = [...state.ingredients];
-            let deleteIndex = cloneIngredients.findIndex(item => item.guid === action.payload);
-            cloneIngredients.splice(deleteIndex, 1);
-            return {...state, ingredients: cloneIngredients};
+            return {...state, ingredients: [...state.ingredients].filter(item => item.guid !== action.payload)};
         case ConstructorActionTypes.SORT_INGREDIENTS:
             return {...state};
         case ConstructorActionTypes.RESET:

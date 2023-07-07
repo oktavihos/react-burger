@@ -5,37 +5,45 @@ export const ingredientsInitialState: TIngredientsState = {ingredients: [], sele
 
 export const ingredientsReducer: TIngredientsReducer = (state, action) => {
     switch(action.type){
-        case IngredientsActionTypes.SELECT:
+        case IngredientsActionTypes.SELECT: {
             return {...state, selectIngredients: action.payload};
-        case IngredientsActionTypes.UNSELECT:
+        }
+        case IngredientsActionTypes.UNSELECT: {
             return {...state, selectIngredients: undefined};
-        case IngredientsActionTypes.LOAD_INGREDIENTS:
+        }
+        case IngredientsActionTypes.LOAD_INGREDIENTS: {
             return {...state, ingredients: action.payload};
-        case IngredientsActionTypes.INCREMENT:
-        case IngredientsActionTypes.DESCREMENT:
-            let indexItem = state.ingredients.findIndex(item => item._id === action.payload);
-            let cloneIngredients = [...state.ingredients];
-            let item = cloneIngredients[indexItem];
-            let isBun = item.type === BurgerTypes.BUN;
+        }
+        case IngredientsActionTypes.INCREMENT: {
+            let hasBun = false, incrementState = {...state, ingredients: [...state.ingredients].map(item => {
+                    if(item.type === BurgerTypes.BUN && item._id === action.payload) hasBun = true;
 
-            let currentBunIndex = cloneIngredients.findIndex(element => 
-                item._id !== element._id
-                && element.type === BurgerTypes.BUN
-                && element.count && element.count > 0
+                    return item._id === action.payload 
+                    ? {...item, count: (item.count ? item.count : 0) + (item.type === BurgerTypes.BUN ? 2 : 1)}
+                    : item;
+                }
+            )};
+            if(hasBun) incrementState.ingredients = incrementState.ingredients.map(
+                item => item.type === BurgerTypes.BUN && item._id !== action.payload 
+                ? {...item, count: 0} 
+                : item
             );
-            
-            if(currentBunIndex > -1 && isBun){
-                cloneIngredients.splice(currentBunIndex, 1, {...cloneIngredients[currentBunIndex], count: 0});
-            }
-            let count = 0;
-            
-            if(action.type === IngredientsActionTypes.INCREMENT) count = 1;
-            else count = -1;
-            cloneIngredients.splice(indexItem, 1, {...item, count: isBun ? 2 : (item?.count ?? 0) + count});
-            
-            return {...state, ingredients: cloneIngredients};
-        case IngredientsActionTypes.RESET:
-            return {...state, ingredients: state.ingredients.map(element => { return {...element, count: 0} })};
+            return incrementState;
+        }
+        case IngredientsActionTypes.DESCREMENT: {
+            return {...state, ingredients: [...state.ingredients].map(
+                item => item._id === action.payload && item.count && item.count > 0
+                ? {...item, count: item.count - (item.type === BurgerTypes.BUN ? 2 : 1)}
+                : item
+            )};
+        }
+        case IngredientsActionTypes.RESET: {
+            return {...state, ingredients: [...state.ingredients].map(
+                item => item.count && item.count > 0 
+                ? {...item, count: 0} 
+                : item
+            )};
+        }
         default:
             return state;
     }
