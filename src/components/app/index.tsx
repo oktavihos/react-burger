@@ -1,47 +1,25 @@
-import { useEffect, useMemo, useReducer, useState } from "react";
-import useRequest from "../../hooks/use-request";
+import { useEffect } from "react";
 import AppHeader from "../app-header";
 import BurgerConstructor from "../burger-constructor";
 import BurgerIngridients from "../burger-ingredients";
 import appStyle from './style.module.sass';
 import LoaderPage from "../loader-page";
-import { BurgerIngredientsContext } from "../../services/burger-ingredients-context";
-import { BurgerConstructorContext } from "../../services/burger-constructor-context";
-import { IngredientsActionTypes, TIngredientsReducer } from "../../store/burger-ingredients/types";
-import { ingredientsInitialState, ingredientsReducer } from "../../store/burger-ingredients/reducer";
-import { constructorInitialState, constructorReducer } from "../../store/burger-constructor/reducer";
-import { TConstructorReducer } from "../../store/burger-constructor/types";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { useSelector } from "react-redux";
+import { getIngredients } from "../../services/ingredients/ingredients-slice";
+import { RootState, useAppDispatch } from "../../services/store";
 
 
 
 const App: React.FC = () => {
 
-    const [isLoading, setLoading] = useState(false);
-    const [errors, setErrors] = useState<string[]>([]);
-
-    const [ingredientsState, ingredientsDispatch] = useReducer<TIngredientsReducer>(ingredientsReducer, ingredientsInitialState, undefined);
-    const [constructorState, constructorDispatch] = useReducer<TConstructorReducer>(constructorReducer, constructorInitialState, undefined);
-
-    const getIngredients = useRequest('ingredients');
+    const dispatch = useAppDispatch();
+    const { isFailed, isLoading } = useSelector<RootState>(state => state.ingredients);
 
     useEffect(() => {
-        setLoading(true);
-        getIngredients().then(result => {
-            ingredientsDispatch({type: IngredientsActionTypes.LOAD_INGREDIENTS, payload: result.data});
-            setLoading(false);
-        }).catch(error => {
-            setErrors([error.toString()]);
-            setLoading(false);
-        });
-    }, []); //eslint-disable-line react-hooks/exhaustive-deps
-
-    const dataIngredientsProvider = useMemo(() => {
-        return {ingredientsState, ingredientsDispatch};
-    }, [ingredientsState, ingredientsDispatch]);  //eslint-disable-line react-hooks/exhaustive-deps
-
-    const dataConstructorProvider = useMemo(() => {
-        return {constructorState, constructorDispatch};
-    }, [constructorState, constructorDispatch]);  //eslint-disable-line react-hooks/exhaustive-deps
+        dispatch(getIngredients());
+    }, [dispatch]);
 
     return(
         <>
@@ -52,16 +30,14 @@ const App: React.FC = () => {
                         return <div>{error}</div>
                     })}
                 </div> :
-                    <BurgerIngredientsContext.Provider value={dataIngredientsProvider}>
-                        <BurgerConstructorContext.Provider value={dataConstructorProvider}>
-                            <section className={`${appStyle.section} pr-5`}>
-                                <BurgerIngridients />
-                            </section>
-                            <section className={`${appStyle.section} pl-5 pt-25 pb-10`}>
-                                <BurgerConstructor />
-                            </section>
-                        </BurgerConstructorContext.Provider>
-                    </BurgerIngredientsContext.Provider>
+                    <DndProvider backend={HTML5Backend}>
+                        <section className={`${appStyle.section} pr-5`}>
+                            <BurgerIngridients />
+                        </section>
+                        <section className={`${appStyle.section} pl-5 pt-25 pb-10`}>
+                            <BurgerConstructor />
+                        </section>
+                    </DndProvider>
                 )}
             </main>
         </>

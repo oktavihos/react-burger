@@ -5,10 +5,8 @@ import BurgerCategory from './components/burger-category';
 import BurgerElement from './components/burger-element';
 import ingridientsStyle from './style.module.sass';
 import { locCategories } from './locale';
-import { BurgerTypes, TBurgerData, TCategoriesData } from '../app/types';
+import { BurgerTypes, TBurgerData } from '../app/types';
 import IngredientsDetail from './components/ingredients-detail';
-import { BurgerIngredientsContext } from '../../services/burger-ingredients-context';
-import { IngredientsActionTypes } from '../../store/burger-ingredients/types';
 
 const BurgerIngredients: React.FC = () => {
 

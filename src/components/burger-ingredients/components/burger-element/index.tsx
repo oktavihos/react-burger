@@ -3,10 +3,10 @@ import elementStyle from './style.module.sass';
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 import React, { useContext } from "react";
 import { BurgerConstructorContext } from "../../../../services/burger-constructor-context";
-import { ConstructorActionTypes } from "../../../../store/burger-constructor/types";
+import { ConstructorActionTypes } from "../../../../services/reducers/burger-constructor/types";
 import { BurgerIngredientsContext } from "../../../../services/burger-ingredients-context";
 import { v4 as uuidv4 } from 'uuid';
-import { IngredientsActionTypes } from "../../../../store/burger-ingredients/types";
+import { IngredientsActionTypes } from "../../../../services/reducers/burger-ingredients/types";
 
 const BurgerElement: React.FC<TBurgerElementProps> = React.memo(({data, selectHandle = () => {}}) => {
 

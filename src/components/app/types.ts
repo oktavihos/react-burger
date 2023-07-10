@@ -19,13 +19,3 @@ export enum BurgerTypes {
     MAIN = 'main',
     SAUSES = 'sauce'
 };
-
-export type TCategoriesData = {
-    items: TBurgerData[],
-    type: string,
-    title: string
-};
-
-export type TCategoriesItem = {
-    [key: string]: string
-};
