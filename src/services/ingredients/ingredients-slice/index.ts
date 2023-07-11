@@ -21,35 +21,39 @@ const ingredientsSlice = createSlice({
     reducers: {
         incrementIngredient: (state, action: PayloadAction<string>) => {
             let hasBun = false;
-            let result: TIngredientsState = {...state, data: state.data.filter(item => {
+            state.data = state.data.map(item => {
                 let isCurrentElement = item._id === action.payload;
                 if(isCurrentElement && item.type === BurgerTypes.BUN && !hasBun) hasBun = true;
 
                 return isCurrentElement 
-                    ? {...item, count: item.count ?? 0 + (hasBun ? 2 : 1)} 
+                    ? {...item, count: (hasBun ? 0 : item.count ?? 0) + (hasBun ? 2 : 1)} 
                     : item
-            })};
+            });
             
-            if(hasBun) result.data = result.data.filter(item => {
-                return item._id !== action.payload && BurgerTypes.BUN && item.count && item.count > 0
+            if(hasBun) state.data = state.data.map(item => {
+                return item._id !== action.payload && item.type === BurgerTypes.BUN && item.count && item.count > 0
                     ? {...item, count: 0} 
                     : item
                 }
             );
 
-            return result;
+            return state;
         },
         decrementIngredient: (state, action: PayloadAction<string>) => {
-            return {...state, data: state.data.filter(item => item._id === action.payload  && item.count && item.count > 0
-                ? {...item, count: item.count - (item.type === BurgerTypes.BUN ? -2 : -1)} 
+            state.data = state.data.map(item => item._id === action.payload  && item.count && item.count > 0
+                ? {...item, count: item.count - (item.type === BurgerTypes.BUN ? 2 : 1)} 
                 : item
-            )};
+            );
+
+            return state;
         },
         resetIngredients: state => {
-            return {...state, data: state.data.filter(item => item.count && item.count > 0 
+            state.data = state.data.map(item => item.count && item.count > 0 
                 ? {...item, count: 0} 
                 : item
-            )}
+            );
+
+            return state;
         },
         selectIngredient: (state, action: PayloadAction<TIngredient>) => {
             state.select = action.payload;

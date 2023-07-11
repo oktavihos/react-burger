@@ -18,3 +18,8 @@ export type TConstructorState = {
     isLoading: boolean,
     isFailed: boolean
 };
+
+export type TSortPayload = {
+    dragIndex: number,
+    hoverIndex: number
+};

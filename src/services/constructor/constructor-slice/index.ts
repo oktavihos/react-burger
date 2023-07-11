@@ -1,17 +1,15 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { TConstructorIngredient, TConstructorState, TOrderData, TOrderItems } from "./type";
+import { TConstructorIngredient, TConstructorState, TOrderData, TOrderItems, TSortPayload } from "./type";
 import { BurgerTypes } from "../../../components/app/types";
 import request from "../../../components/api";
-import { TResponseResult } from "../../../components/api/types";
 
 export const initialState: TConstructorState = {data: [], isLoading: false, isFailed: false};
 
 export const sendOrder = createAsyncThunk(
     "constructor/fetchOrder",
     async (orderItems: TOrderItems) => {
-        let result = await request<TResponseResult<TOrderData>>('orders', 'POST', orderItems);
-        if(!result.success) Promise.reject('Произошла ошибка при отправке данных');
-        return result.data;
+        let result = await request<TOrderData>('orders', 'POST', orderItems);
+        return result;
     }
 );
 
@@ -26,9 +24,25 @@ const constructorSlice = createSlice({
             return state;
         },
         deleteIngredient: (state, action: PayloadAction<string>) => {
-            return {...state, data: state.data.filter(item => item.guid !== action.payload)};
+            state.data = state.data.filter(item => item.guid !== action.payload);
+            return state;
         },
-        resetConstructor: () => initialState
+        resetConstructor: () => initialState,
+        sortConstructor: (state, action: PayloadAction<TSortPayload>) => {
+
+            let pushItem = {...state.data[action.payload.dragIndex]};
+            state.data.splice(action.payload.dragIndex, 1);
+            state.data.splice(action.payload.hoverIndex, 0, pushItem);
+
+            // update(prevCards, {
+            //     $splice: [
+            //       [dragIndex, 1],
+            //       [hoverIndex, 0, prevCards[dragIndex] as Item],
+            //     ],
+            //   }),
+
+            return state;
+        }
     },
     extraReducers: builder =>
         builder.addCase(sendOrder.fulfilled, (state, action) => {
@@ -43,7 +57,8 @@ const constructorSlice = createSlice({
 export const {
     addIngredient, 
     deleteIngredient, 
-    resetConstructor 
+    resetConstructor,
+    sortConstructor
 } = constructorSlice.actions;
 
 export default constructorSlice.reducer;

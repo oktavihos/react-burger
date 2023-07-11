@@ -1,15 +1,18 @@
-import { Button, ConstructorElement, CurrencyIcon, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import { Button, ConstructorElement, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useCallback, useMemo, useState } from "react";
 import constructorStyle from './style.module.sass';
 import OrderDetails from "../order-details";
 import { useAppDispatch, useAppSelector } from "../../services/store";
 import { TOrderItems } from "../../services/constructor/constructor-slice/type";
 import { addIngredient, deleteIngredient, resetConstructor, sendOrder } from "../../services/constructor/constructor-slice";
-import { decrementIngredient, resetIngredients } from "../../services/ingredients/ingredients-slice";
+import { decrementIngredient, incrementIngredient, resetIngredients } from "../../services/ingredients/ingredients-slice";
 import { useDrop } from "react-dnd";
 import { v4 as uuidv4 } from 'uuid';
-import { DragTypes } from "../app/types";
+import { BurgerTypes, DragTypes } from "../app/types";
 import { TIngredient } from "../../services/ingredients/ingredients-slice/types";
+import ConstructorDragItem from "./components/drag-item";
+import EmptyItem from "./components/empty-item";
+import { EmptyItemTypes } from "./components/empty-item/types";
 
 const BurgerConstructor: React.FC = () => {
 
@@ -52,13 +55,15 @@ const BurgerConstructor: React.FC = () => {
         dispatch(sendOrder(orderItems));
     }
 
-    const [, dropTarget] = useDrop({
+    const [{item, isHover}, dropTarget] = useDrop({
         accept: DragTypes.INGREDIENTS,
         drop(data: TIngredient){
             dispatch(addIngredient({...data, guid: uuidv4()}));
+            dispatch(incrementIngredient(data._id));
         },
         collect: monitor => ({
-            isHover: monitor.isOver()
+            isHover: monitor.isOver(),
+            item: monitor.getItem()
         })
     });
 
@@ -66,38 +71,31 @@ const BurgerConstructor: React.FC = () => {
         <>
             {open && <OrderDetails data={order} closeModalHandle={closeModalHandle} />}
             <div style={{}} ref={dropTarget} className={`${constructorStyle.currentList} mb-25`}>
-                {bun && <ConstructorElement
+                {bun ? <ConstructorElement
                     extraClass="ml-7"
                     type="top"
                     isLocked
                     text={`${bun.name} (верх)`}
                     price={bun.price}
                     thumbnail={bun.image_mobile}
-                />}
-                <div className={`${constructorStyle.scrollList} scroll scroll-view`}>
-                    {data.map(item => {
-                        return (
-                            <div key={item.guid} className={constructorStyle.dragItem}>
-                                <DragIcon type="primary" />
-                                <ConstructorElement
-                                    extraClass="ml-1"
-                                    text={item.name}
-                                    price={item.price}
-                                    thumbnail={item.image_mobile}
-                                    handleClose={() => deleteItemHandle(item.guid)}
-                                />
-                            </div>
-                        );
-                    })}
-                </div>
-                {bun && <ConstructorElement
+                /> : <EmptyItem active={(isHover && item.type === BurgerTypes.BUN)} type={EmptyItemTypes.TOP} text="Добавьте булку" />}
+                {data.length > 0 ? (
+                    <div className={`${constructorStyle.scrollList} scroll scroll-view`}>
+                        {data.map((item, index) => {
+                            return (
+                                <ConstructorDragItem index={index} key={item.guid} item={item} deleteItemHandle={deleteItemHandle} />
+                            );
+                        })}
+                    </div>
+                ) : <EmptyItem active={(isHover && item.type !== BurgerTypes.BUN)} type={EmptyItemTypes.CENTER} text="Добавьте ингредиент" />}
+                {bun ? <ConstructorElement
                     extraClass="ml-7"
                     type="bottom"
                     isLocked
                     text={`${bun.name} (низ)`}
                     price={bun.price}
                     thumbnail={bun.image_mobile}
-                />}
+                /> : <EmptyItem active={(isHover && item.type === BurgerTypes.BUN)} type={EmptyItemTypes.BOTTOM} text="Добавьте булку" />}
             </div>
             <div className={constructorStyle.total}>
                 <span className={`${constructorStyle.price} text text_type_digits-medium`}>{total}</span>
