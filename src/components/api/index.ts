@@ -1,6 +1,6 @@
 import * as Config from '../../config/api';
 
-const request = <T = any>(
+const request = async <T = any>(
     endpoint: string,
     method: string = 'GET',
     body?: Object
@@ -16,14 +16,8 @@ const request = <T = any>(
         };
     }
 
-    return fetch(`${Config.API_URL}${endpoint}`, params)
-        .then(response => response.ok ? response.json() : response.json().then(error => Promise.reject(error)))
-        .then(responseResult => {
-            if(responseResult.success) return responseResult;
-            else{
-                Promise.reject("Произошла ошибка при отправке данных");
-            }
-        });
+    return await fetch(`${Config.API_URL}${endpoint}`, params)
+        .then(response => response.ok ? response.json() : response.json().then(error => Promise.reject(error)));
 }
 
 export default request;

@@ -1,75 +1,81 @@
 import { Button, ConstructorElement, CurrencyIcon, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useCallback, useMemo, useState, useContext } from "react";
+import { useCallback, useMemo, useState } from "react";
 import constructorStyle from './style.module.sass';
 import OrderDetails from "../order-details";
-import { BurgerConstructorContext } from "../../services/burger-constructor-context";
-import { ConstructorActionTypes } from "../../services/reducers/burger-constructor/types";
-import { BurgerIngredientsContext } from "../../services/burger-ingredients-context";
-import { IngredientsActionTypes } from "../../services/reducers/burger-ingredients/types";
-import useRequest from "../../hooks/use-request";
-import { TOrderItems } from "./types";
-import { TOrderData } from "../order-details/types";
+import { useAppDispatch, useAppSelector } from "../../services/store";
+import { TOrderItems } from "../../services/constructor/constructor-slice/type";
+import { addIngredient, deleteIngredient, resetConstructor, sendOrder } from "../../services/constructor/constructor-slice";
+import { decrementIngredient, resetIngredients } from "../../services/ingredients/ingredients-slice";
+import { useDrop } from "react-dnd";
+import { v4 as uuidv4 } from 'uuid';
+import { DragTypes } from "../app/types";
+import { TIngredient } from "../../services/ingredients/ingredients-slice/types";
 
 const BurgerConstructor: React.FC = () => {
 
     const [open, setOpen] = useState(false);
-    const [order, setOrder] = useState<TOrderData|undefined>(undefined);
-    const [errors, setErrors] = useState<string[]>([]);
-    const { constructorState, constructorDispatch } = useContext(BurgerConstructorContext);
-    const { ingredientsDispatch } = useContext(BurgerIngredientsContext);
+    const { data, bun, order } = useAppSelector(state => state.burgerConstructor);
+    const dispatch = useAppDispatch();
 
     const [total, orderItems] = useMemo<[number, TOrderItems]>(() => {
         let total: number = 0;
         let orderItems: TOrderItems = {ingredients: []};
 
-        constructorState?.ingredients.forEach(item => {
+        data.forEach(item => {
             total += item.price;
             orderItems.ingredients.push(item._id);
         });
 
-        if(constructorState?.bun){
-            total += constructorState.bun.price * 2;
-            orderItems.ingredients.push(constructorState.bun._id, constructorState.bun._id);
+        if(bun){
+            total += bun.price * 2;
+            orderItems.ingredients.push(bun._id, bun._id);
         }
 
         return [total, orderItems];
-    }, [constructorState]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    const sendOrder = useRequest('orders', 'POST', orderItems);
+    }, [data, bun]);
 
     const closeModalHandle = useCallback(() => {
         setOpen(false);
-        setOrder(undefined);
-        if(constructorDispatch) constructorDispatch({type: ConstructorActionTypes.RESET});
-        if(ingredientsDispatch) ingredientsDispatch({type: IngredientsActionTypes.RESET});
-    }, [setOpen, setOrder, constructorDispatch, ingredientsDispatch]);
+        dispatch(resetIngredients());
+        dispatch(resetConstructor());
+    }, [setOpen, dispatch]);
 
     const deleteItemHandle = (guid: string) => {
-        let data = constructorState?.ingredients.find(item => item.guid === guid);
-        if(constructorDispatch) constructorDispatch({type: ConstructorActionTypes.DELETE_INGREDIENT, payload: guid});
-        if(ingredientsDispatch && data) ingredientsDispatch({type: IngredientsActionTypes.DESCREMENT, payload: data._id})
+        let deleteItem = data.find(item => item.guid === guid);
+        dispatch(deleteIngredient(guid))
+        if(deleteItem) dispatch(decrementIngredient(deleteItem._id));
     }
 
     const submitOrderHandle = () => {
-        if(!constructorState?.bun || constructorState?.ingredients.length === 0) return false;
+        if(!bun || data.length === 0) return false;
         setOpen(true);
-        sendOrder().then(result => setOrder(result)).catch(error => setErrors([error]));
+        dispatch(sendOrder(orderItems));
     }
+
+    const [, dropTarget] = useDrop({
+        accept: DragTypes.INGREDIENTS,
+        drop(data: TIngredient){
+            dispatch(addIngredient({...data, guid: uuidv4()}));
+        },
+        collect: monitor => ({
+            isHover: monitor.isOver()
+        })
+    });
 
     return (
         <>
-            {open && <OrderDetails data={order} errors={errors} closeModalHandle={closeModalHandle} />}
-            <div className={`${constructorStyle.currentList} mb-25`}>
-                {constructorState?.bun && <ConstructorElement
+            {open && <OrderDetails data={order} closeModalHandle={closeModalHandle} />}
+            <div style={{}} ref={dropTarget} className={`${constructorStyle.currentList} mb-25`}>
+                {bun && <ConstructorElement
                     extraClass="ml-7"
                     type="top"
                     isLocked
-                    text={`${constructorState.bun.name} (верх)`}
-                    price={constructorState.bun.price}
-                    thumbnail={constructorState.bun.image_mobile}
+                    text={`${bun.name} (верх)`}
+                    price={bun.price}
+                    thumbnail={bun.image_mobile}
                 />}
                 <div className={`${constructorStyle.scrollList} scroll scroll-view`}>
-                    {constructorState?.ingredients.map(item => {
+                    {data.map(item => {
                         return (
                             <div key={item.guid} className={constructorStyle.dragItem}>
                                 <DragIcon type="primary" />
@@ -84,13 +90,13 @@ const BurgerConstructor: React.FC = () => {
                         );
                     })}
                 </div>
-                {constructorState?.bun && <ConstructorElement
+                {bun && <ConstructorElement
                     extraClass="ml-7"
                     type="bottom"
                     isLocked
-                    text={`${constructorState.bun.name} (низ)`}
-                    price={constructorState.bun.price}
-                    thumbnail={constructorState.bun.image_mobile}
+                    text={`${bun.name} (низ)`}
+                    price={bun.price}
+                    thumbnail={bun.image_mobile}
                 />}
             </div>
             <div className={constructorStyle.total}>

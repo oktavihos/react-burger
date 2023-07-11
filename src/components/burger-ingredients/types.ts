@@ -1,8 +1,7 @@
-import { TBurgerData } from "../app/types";
-
+import { TIngredient } from "../../services/ingredients/ingredients-slice/types";
 
 export type TCategoriesData = {
-    items: TBurgerData[],
+    items: TIngredient[],
     type: string,
     title: string
 };

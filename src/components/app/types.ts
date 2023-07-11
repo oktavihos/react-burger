@@ -19,3 +19,8 @@ export enum BurgerTypes {
     MAIN = 'main',
     SAUSES = 'sauce'
 };
+
+export enum DragTypes {
+    INGREDIENTS = 'ingredients',
+    SORT_CONSTRUCTOR = 'constructor'
+};

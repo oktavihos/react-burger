@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import AppHeader from "../app-header";
 import BurgerConstructor from "../burger-constructor";
 import BurgerIngridients from "../burger-ingredients";
@@ -6,16 +5,16 @@ import appStyle from './style.module.sass';
 import LoaderPage from "../loader-page";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../services/store";
+import { useEffect } from "react";
 import { getIngredients } from "../../services/ingredients/ingredients-slice";
-import { RootState, useAppDispatch } from "../../services/store";
 
 
 
 const App: React.FC = () => {
 
+    const { isFailed, isLoading } = useAppSelector(state => state.ingredients);
     const dispatch = useAppDispatch();
-    const { isFailed, isLoading } = useSelector<RootState>(state => state.ingredients);
 
     useEffect(() => {
         dispatch(getIngredients());
@@ -25,10 +24,8 @@ const App: React.FC = () => {
         <>
             <AppHeader />
             <main className={`${appStyle.main} pl-5 pr-5`}>
-                {isLoading ? <LoaderPage /> : (errors.length > 0 ? <div className="pt-15 text text_type_main-default">
-                    {errors.map(error => {
-                        return <div>{error}</div>
-                    })}
+                {isLoading ? <LoaderPage /> : (isFailed ? <div className="pt-15 text text_type_main-default">
+                    Произошла ошибка при отправке данных
                 </div> :
                     <DndProvider backend={HTML5Backend}>
                         <section className={`${appStyle.section} pr-5`}>
