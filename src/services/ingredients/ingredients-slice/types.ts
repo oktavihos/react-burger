@@ -7,5 +7,5 @@ export type TIngredientsState = {
     select?: TIngredient,
     isLoading: boolean,
     isFailed: boolean,
-    errors: string[]
+    error?: string
 };

@@ -1,11 +1,11 @@
 import { TConstructorIngredient } from "../../../../services/constructor/constructor-slice/type"
 
-export type TCOnstructorDragItemProps = {
+export type TConstructorDragItemProps = {
     item: TConstructorIngredient,
     deleteItemHandle: (guid: string) => void,
     index: number
 }
 
-export type TCOnstructorDragItem = {
+export type TConstructorDragItem = {
     index: number
 }

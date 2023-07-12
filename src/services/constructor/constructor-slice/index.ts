@@ -42,7 +42,7 @@ const constructorSlice = createSlice({
             return {...state, isLoading: false, isFailed: false, order: action.payload};
         })
         .addCase(sendOrder.pending, state => ({...state, isLoading: true}))
-        .addCase(sendOrder.rejected, state => ({...state, isLoading: false, isFailed: true}))
+        .addCase(sendOrder.rejected, (state, action) => ({...state, isLoading: false, isFailed: true, error: action.error.message}))
 });
 
 

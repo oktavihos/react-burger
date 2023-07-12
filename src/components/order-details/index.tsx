@@ -5,14 +5,12 @@ import orderDetailsStyle from './style.module.sass';
 import React from 'react';
 import Loader from '../loader';
 
-const OrderDetails: React.FC<TOrderDetailsProps> = React.memo(({errors = [], data = undefined, closeModalHandle = () => {}}) => {
+const OrderDetails: React.FC<TOrderDetailsProps> = React.memo(({error = undefined, data = undefined, closeModalHandle = () => {}}) => {
     return (
         <Modal extraClass={orderDetailsStyle.modal} closeModalHandle={closeModalHandle}>
             {!data ? (
                 <>
-                    {errors.length > 0 ? errors.map(error => {
-                        return <div className={orderDetailsStyle.error}>{error}</div>
-                    }) : <Loader />}
+                    {error ? <div className={orderDetailsStyle.error}>{error}</div> : <Loader />}
                 </>
             ) : (
                 <>

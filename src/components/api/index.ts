@@ -20,7 +20,7 @@ const request = async <T = any>(
         .then(response => response.ok ? response.json() : response.json().then(error => Promise.reject(error)))
         .then(result => {
             if(result.success) return result;
-            else Promise.reject('Произошла ошибка при отправке запроса');
+            else return Promise.reject('Произошла ошибка при отправке запроса');
         });
 }
 

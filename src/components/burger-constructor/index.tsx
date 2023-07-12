@@ -17,7 +17,7 @@ import { EmptyItemTypes } from "./components/empty-item/types";
 const BurgerConstructor: React.FC = () => {
 
     const [open, setOpen] = useState(false);
-    const { data, bun, order } = useAppSelector(state => state.burgerConstructor);
+    const { data, bun, order, error = undefined } = useAppSelector(state => state.burgerConstructor);
     const dispatch = useAppDispatch();
 
     const [total, orderItems] = useMemo<[number, TOrderItems]>(() => {
@@ -43,11 +43,11 @@ const BurgerConstructor: React.FC = () => {
         dispatch(resetConstructor());
     }, [setOpen, dispatch]);
 
-    const deleteItemHandle = (guid: string) => {
+    const deleteItemHandle = useCallback((guid: string) => {
         let deleteItem = data.find(item => item.guid === guid);
         dispatch(deleteIngredient(guid))
         if(deleteItem) dispatch(decrementIngredient(deleteItem._id));
-    }
+    }, [dispatch, data]);
 
     const submitOrderHandle = () => {
         if(!bun || data.length === 0) return false;
@@ -69,7 +69,7 @@ const BurgerConstructor: React.FC = () => {
 
     return (
         <>
-            {open && <OrderDetails data={order} closeModalHandle={closeModalHandle} />}
+            {open && <OrderDetails error={error} data={order} closeModalHandle={closeModalHandle} />}
             <div style={{}} ref={dropTarget} className={`${constructorStyle.currentList} mb-25`}>
                 {bun ? <ConstructorElement
                     extraClass="ml-7"

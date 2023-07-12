@@ -1,6 +1,6 @@
 import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import constructorItemStyle from './style.module.sass';
-import { TCOnstructorDragItem, TCOnstructorDragItemProps } from "./type";
+import { TConstructorDragItem, TConstructorDragItemProps } from "./type";
 import { DragTypes } from "../../../app/types";
 import { useDrag, useDrop } from "react-dnd";
 import { useRef } from "react";
@@ -8,7 +8,7 @@ import { Identifier, XYCoord } from "dnd-core";
 import { useAppDispatch } from "../../../../services/store";
 import { sortConstructor } from "../../../../services/constructor/constructor-slice";
 
-const ConstructorDragItem: React.FC<TCOnstructorDragItemProps> = ({item, index, deleteItemHandle}) => {
+const ConstructorDragItem: React.FC<TConstructorDragItemProps> = ({item, index, deleteItemHandle}) => {
 
     const ref = useRef<HTMLDivElement>(null);
     const dispatch = useAppDispatch();
@@ -20,11 +20,11 @@ const ConstructorDragItem: React.FC<TCOnstructorDragItemProps> = ({item, index, 
             collect: monitor => ({
                 opacity: monitor.isDragging() ? 0.5 : 1
             })
-        }), []
+        }), [index, item]
     );
 
     const [{ handlerId }, drop] = useDrop<
-        TCOnstructorDragItem,
+        TConstructorDragItem,
         void,
         { handlerId: Identifier | null }
     >({
@@ -32,7 +32,7 @@ const ConstructorDragItem: React.FC<TCOnstructorDragItemProps> = ({item, index, 
         collect: monitor => ({
             handlerId: monitor.getHandlerId(),
         }),
-        hover(item: TCOnstructorDragItem, monitor) {
+        hover(item: TConstructorDragItem, monitor) {
           if (!ref.current) return;
           const dragIndex = item.index;
           const hoverIndex = index;
@@ -40,8 +40,7 @@ const ConstructorDragItem: React.FC<TCOnstructorDragItemProps> = ({item, index, 
           if (dragIndex === hoverIndex) return;
           const hoverBoundingRect = ref.current?.getBoundingClientRect();
 
-          const hoverMiddleY =
-            (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+          const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
           const clientOffset = monitor.getClientOffset();
     
           const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;

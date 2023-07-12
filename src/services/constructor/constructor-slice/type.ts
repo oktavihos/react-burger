@@ -16,7 +16,8 @@ export type TConstructorState = {
     bun?: TBurgerData,
     order?: TOrderData,
     isLoading: boolean,
-    isFailed: boolean
+    isFailed: boolean,
+    error?: string
 };
 
 export type TSortPayload = {

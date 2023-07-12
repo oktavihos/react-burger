@@ -5,7 +5,7 @@ import request from "../../../components/api";
 import { BurgerTypes, TBurgerData } from "../../../components/app/types";
 import { TResponseResult } from "../../../components/api/types";
 
-export const initialState: TIngredientsState = {data: [], isLoading: false, isFailed: false, errors: []};
+export const initialState: TIngredientsState = {data: [], isLoading: false, isFailed: false};
 
 export const getIngredients = createAsyncThunk(
     "ingredients/fetchIngredients",
@@ -68,7 +68,7 @@ const ingredientsSlice = createSlice({
         builder
         .addCase(getIngredients.fulfilled, (state, action) => ({...state, data: action.payload, isLoading: false}))
         .addCase(getIngredients.pending, state => ({...state, isLoading: true}))
-        .addCase(getIngredients.rejected, (state) => ({...state, isLoading: false, isFailed: true}))
+        .addCase(getIngredients.rejected, (state, action) => ({...state, isLoading: false, isFailed: true, error: action.error.message}))
     }
 });
 
