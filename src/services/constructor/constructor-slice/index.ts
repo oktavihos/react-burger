@@ -34,13 +34,6 @@ const constructorSlice = createSlice({
             state.data.splice(action.payload.dragIndex, 1);
             state.data.splice(action.payload.hoverIndex, 0, pushItem);
 
-            // update(prevCards, {
-            //     $splice: [
-            //       [dragIndex, 1],
-            //       [hoverIndex, 0, prevCards[dragIndex] as Item],
-            //     ],
-            //   }),
-
             return state;
         }
     },

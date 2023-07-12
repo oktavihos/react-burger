@@ -61,7 +61,7 @@ const ConstructorDragItem: React.FC<TCOnstructorDragItemProps> = ({item, index, 
             <DragIcon type="primary" />
             <ConstructorElement
                 extraClass="ml-1"
-                text={`${index}: ${item.name}`}
+                text={item.name}
                 price={item.price}
                 thumbnail={item.image_mobile}
                 handleClose={() => deleteItemHandle(item.guid)}
