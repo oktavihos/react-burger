@@ -20,12 +20,7 @@ export enum BurgerTypes {
     SAUSES = 'sauce'
 };
 
-export type TCategoriesData = {
-    items: TBurgerData[],
-    type: string,
-    title: string
-};
-
-export type TCategoriesItem = {
-    [key: string]: string
+export enum DragTypes {
+    INGREDIENTS = 'ingredients',
+    SORT_CONSTRUCTOR = 'constructor'
 };

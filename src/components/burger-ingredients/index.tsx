@@ -1,14 +1,15 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { useContext } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import BurgerCategory from './components/burger-category';
 import BurgerElement from './components/burger-element';
 import ingridientsStyle from './style.module.sass';
 import { locCategories } from './locale';
-import { BurgerTypes, TBurgerData, TCategoriesData } from '../app/types';
+import { BurgerTypes } from '../app/types';
 import IngredientsDetail from './components/ingredients-detail';
-import { BurgerIngredientsContext } from '../../services/burger-ingredients-context';
-import { IngredientsActionTypes } from '../../store/burger-ingredients/types';
+import { useAppSelector, useAppDispatch } from '../../services/store';
+import { unselectIngredient } from '../../services/ingredients/ingredients-slice';
+import { TCategoriesData } from './types';
+import Modal from '../modal';
 
 const BurgerIngredients: React.FC = () => {
 
@@ -16,7 +17,10 @@ const BurgerIngredients: React.FC = () => {
     const observer = useRef<IntersectionObserver | null>(null);
     const titleRef = useRef<(HTMLHeadingElement | null)[]>([]);
 
-    const { ingredientsState, ingredientsDispatch } = useContext(BurgerIngredientsContext);
+    const dispatch = useAppDispatch();
+    const { data, select, error = undefined } = useAppSelector(state => {
+        return state.ingredients
+    });
 
     useEffect(() => {
         const root = document.getElementById('scroll-sections');
@@ -38,25 +42,20 @@ const BurgerIngredients: React.FC = () => {
     }, []);
 
     const closeModalHandle = useCallback(() => {
-        if(ingredientsDispatch) ingredientsDispatch({type: IngredientsActionTypes.UNSELECT});
-    }, [ingredientsDispatch]);
-
-    const openModalHandle = useCallback((data: TBurgerData) => {
-        if(ingredientsDispatch) ingredientsDispatch({type: IngredientsActionTypes.SELECT, payload: data});
-    }, [ingredientsDispatch]);
+        dispatch(unselectIngredient());
+    }, [dispatch]);
 
     const categoriesData: TCategoriesData[] = useMemo(() => {
-        let result: TCategoriesData[] = [];
+        const result: TCategoriesData[] = [];
         Object.keys(locCategories).forEach(type => {
-            let categoryTitle = locCategories[type];
             result.push({
-                title: categoryTitle,
+                title: locCategories[type],
                 type: type,
-                items: ingredientsState?.ingredients ? ingredientsState?.ingredients.filter(item => item.type === type) : []
+                items: data.filter(item => item.type === type)
             });
         });
         return result;
-    }, [ingredientsState]); //eslint-disable-line react-hooks/exhaustive-deps
+    }, [data]);
 
     
 
@@ -70,26 +69,33 @@ const BurgerIngredients: React.FC = () => {
 
     return (
         <>
-            {ingredientsState?.selectIngredients && <IngredientsDetail data={ingredientsState.selectIngredients} closeModalHandle={closeModalHandle} />}
-            <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
-            <div className={`${ingridientsStyle.tabIngridients} mb-10`}>
-                {Object.keys(locCategories).map((type, index) => {
-                    return (
-                        <Tab key={type} value={type} active={current === type} onClick={() => handleScroll(index)}>
-                            {locCategories[type]}
-                        </Tab>
-                    );
-                })}
-            </div>
-            <div id="scroll-sections" className="scroll mb-10">
-                {categoriesData.map((categoryData, index) => {
-                    return (
-                        <BurgerCategory titleRef={(ref) => setRefs(ref, index)} key={categoryData.type} title={categoryData.title} type={categoryData.type}>
-                            {categoryData.items.map(item => <BurgerElement selectHandle={openModalHandle} key={item._id} data={item} />)}
-                        </BurgerCategory>
-                    );
-                })}
-            </div>
+            {select && <Modal title="Детали ингредиента" closeModalHandle={closeModalHandle}>
+                <IngredientsDetail data={select} />
+            </Modal>}
+            
+            {error ? error : (
+                <>
+                    <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
+                    <div className={`${ingridientsStyle.tabIngridients} mb-10`}>
+                        {Object.keys(locCategories).map((type, index) => {
+                            return (
+                                <Tab key={type} value={type} active={current === type} onClick={() => handleScroll(index)}>
+                                    {locCategories[type]}
+                                </Tab>
+                            );
+                        })}
+                    </div>
+                    <div id="scroll-sections" className="scroll mb-10">
+                        {categoriesData.map((categoryData, index) => {
+                            return (
+                                <BurgerCategory titleRef={(ref) => setRefs(ref, index)} key={categoryData.type} title={categoryData.title} type={categoryData.type}>
+                                    {categoryData.items.map(item => <BurgerElement key={item._id} data={item} />)}
+                                </BurgerCategory>
+                            );
+                        })}
+                    </div>
+                </>
+            )}
         </>
     );
 }

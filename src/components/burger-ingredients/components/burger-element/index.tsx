@@ -1,29 +1,33 @@
+import React from "react";
 import { TBurgerElementProps } from "./types";
 import elementStyle from './style.module.sass';
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
-import React, { useContext } from "react";
-import { BurgerConstructorContext } from "../../../../services/burger-constructor-context";
-import { ConstructorActionTypes } from "../../../../store/burger-constructor/types";
-import { BurgerIngredientsContext } from "../../../../services/burger-ingredients-context";
-import { v4 as uuidv4 } from 'uuid';
-import { IngredientsActionTypes } from "../../../../store/burger-ingredients/types";
+import { useAppDispatch } from "../../../../services/store";
+import { selectIngredient } from "../../../../services/ingredients/ingredients-slice";
+import { useDrag } from "react-dnd";
+import { DragTypes } from "../../../app/types";
 
-const BurgerElement: React.FC<TBurgerElementProps> = React.memo(({data, selectHandle = () => {}}) => {
+const BurgerElement: React.FC<TBurgerElementProps> = React.memo(({data}) => {
 
-    const { constructorDispatch } = useContext(BurgerConstructorContext);
-    const { ingredientsDispatch } = useContext(BurgerIngredientsContext);
+    const dispatch = useAppDispatch();
 
-    const addIngredientdHandle = () => {
-        if(constructorDispatch) constructorDispatch({type: ConstructorActionTypes.ADD_INGREDIENT, payload: {...data, guid: uuidv4()}});
-        if(ingredientsDispatch){
-            ingredientsDispatch({type: IngredientsActionTypes.INCREMENT, payload: data._id})
-        }
-        selectHandle(data)
+    const selectIngredientHandle = () => {
+        dispatch(selectIngredient(data));
     }
+
+    const [{ opacity }, dragRef] = useDrag(
+        () => ({
+            type: DragTypes.INGREDIENTS,
+            item: data,
+            collect: monitor => ({
+                opacity: monitor.isDragging() ? 0.5 : 1
+            })
+        }), []
+    );
 
     return (
         <>
-            <div className={`${elementStyle.card}`} onClick={() => addIngredientdHandle()}>
+            <div style={{opacity}} draggable ref={dragRef} className={`${elementStyle.card}`} onClick={() => selectIngredientHandle()}>
                 {data.count ? <Counter count={data.count} size="default" extraClass="m-1" /> : undefined}
                 <div className="pl-4 pr-4"><img alt={data.name} src={data.image} /></div>
                 <div className={`${elementStyle.price} mt-1 mb-1`}>

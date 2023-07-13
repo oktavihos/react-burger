@@ -1,10 +1,5 @@
-export type TOrderData = {
-    name: string,
-    order: {number: number}
-};
+import { TOrderData } from "../../services/constructor/constructor-slice/type";
 
 export type TOrderDetailsProps = {
-    closeModalHandle?: () => void,
-    data?: TOrderData,
-    errors?: string[]
+    data: TOrderData
 };
