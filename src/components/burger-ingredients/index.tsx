@@ -9,6 +9,7 @@ import IngredientsDetail from './components/ingredients-detail';
 import { useAppSelector, useAppDispatch } from '../../services/store';
 import { unselectIngredient } from '../../services/ingredients/ingredients-slice';
 import { TCategoriesData } from './types';
+import Modal from '../modal';
 
 const BurgerIngredients: React.FC = () => {
 
@@ -45,11 +46,10 @@ const BurgerIngredients: React.FC = () => {
     }, [dispatch]);
 
     const categoriesData: TCategoriesData[] = useMemo(() => {
-        let result: TCategoriesData[] = [];
+        const result: TCategoriesData[] = [];
         Object.keys(locCategories).forEach(type => {
-            let categoryTitle = locCategories[type];
             result.push({
-                title: categoryTitle,
+                title: locCategories[type],
                 type: type,
                 items: data.filter(item => item.type === type)
             });
@@ -69,7 +69,10 @@ const BurgerIngredients: React.FC = () => {
 
     return (
         <>
-            {select && <IngredientsDetail data={select} closeModalHandle={closeModalHandle} />}
+            {select && <Modal title="Детали ингредиента" closeModalHandle={closeModalHandle}>
+                <IngredientsDetail data={select} />
+            </Modal>}
+            
             {error ? error : (
                 <>
                     <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>

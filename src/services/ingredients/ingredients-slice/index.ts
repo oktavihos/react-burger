@@ -1,16 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { TIngredientsState, TIngredient } from "./types";
-import request from "../../../components/api";
+import request from "../../../api";
 import { BurgerTypes, TBurgerData } from "../../../components/app/types";
-import { TResponseResult } from "../../../components/api/types";
+import { TResponseResult } from "../../../api/types";
 
 export const initialState: TIngredientsState = {data: [], isLoading: false, isFailed: false};
 
 export const getIngredients = createAsyncThunk(
     "ingredients/fetchIngredients",
     async () => {
-        let result = await request<TResponseResult<TBurgerData[]>>('ingredients');
+        const result = await request<TResponseResult<TBurgerData[]>>('ingredients');
         return result.data;
     }
 );
@@ -22,7 +22,7 @@ const ingredientsSlice = createSlice({
         incrementIngredient: (state, action: PayloadAction<string>) => {
             let hasBun = false;
             state.data = state.data.map(item => {
-                let isCurrentElement = item._id === action.payload;
+                const isCurrentElement = item._id === action.payload;
                 if(isCurrentElement && item.type === BurgerTypes.BUN && !hasBun) hasBun = true;
 
                 return isCurrentElement 

@@ -1,14 +1,14 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { TConstructorIngredient, TConstructorState, TOrderData, TOrderItems, TSortPayload } from "./type";
 import { BurgerTypes } from "../../../components/app/types";
-import request from "../../../components/api";
+import request from "../../../api";
 
 export const initialState: TConstructorState = {data: [], isLoading: false, isFailed: false};
 
 export const sendOrder = createAsyncThunk(
     "constructor/fetchOrder",
     async (orderItems: TOrderItems) => {
-        let result = await request<TOrderData>('orders', 'POST', orderItems);
+        const result = await request<TOrderData>('orders', 'POST', orderItems);
         return result;
     }
 );

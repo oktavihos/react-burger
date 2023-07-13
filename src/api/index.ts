@@ -1,4 +1,4 @@
-import * as Config from '../../config/api';
+import * as Config from '../config/api';
 
 const request = async <T = any>(
     endpoint: string,

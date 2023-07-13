@@ -1,11 +1,10 @@
-import Modal from "../../../modal";
 import { TIngredientsDetailProps } from "./type";
 import ingredientsStyle from './style.module.sass'; 
 import React from "react";
 
-const IngredientsDetail: React.FC<TIngredientsDetailProps> = React.memo(({data, closeModalHandle = () => {}}) => {
+const IngredientsDetail: React.FC<TIngredientsDetailProps> = React.memo(({data}) => {
     return (
-        <Modal title="Детали ингредиента" closeModalHandle={closeModalHandle}>
+        <>
             <div className={ingredientsStyle.image}>
                 <img src={data.image_large} alt={data.name} />
             </div>
@@ -28,7 +27,7 @@ const IngredientsDetail: React.FC<TIngredientsDetailProps> = React.memo(({data, 
                     <span className="text text_type_digits-default">{data.carbohydrates}</span>
                 </div>
             </div>
-        </Modal>
+        </>
     );
 });
 

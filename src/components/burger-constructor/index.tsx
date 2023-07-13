@@ -13,6 +13,8 @@ import { TIngredient } from "../../services/ingredients/ingredients-slice/types"
 import ConstructorDragItem from "./components/drag-item";
 import EmptyItem from "./components/empty-item";
 import { EmptyItemTypes } from "./components/empty-item/types";
+import Modal from "../modal";
+import Loader from "../loader";
 
 const BurgerConstructor: React.FC = () => {
 
@@ -22,7 +24,7 @@ const BurgerConstructor: React.FC = () => {
 
     const [total, orderItems] = useMemo<[number, TOrderItems]>(() => {
         let total: number = 0;
-        let orderItems: TOrderItems = {ingredients: []};
+        const orderItems: TOrderItems = {ingredients: []};
 
         data.forEach(item => {
             total += item.price;
@@ -44,7 +46,7 @@ const BurgerConstructor: React.FC = () => {
     }, [setOpen, dispatch]);
 
     const deleteItemHandle = useCallback((guid: string) => {
-        let deleteItem = data.find(item => item.guid === guid);
+        const deleteItem = data.find(item => item.guid === guid);
         dispatch(deleteIngredient(guid))
         if(deleteItem) dispatch(decrementIngredient(deleteItem._id));
     }, [dispatch, data]);
@@ -69,7 +71,15 @@ const BurgerConstructor: React.FC = () => {
 
     return (
         <>
-            {open && <OrderDetails error={error} data={order} closeModalHandle={closeModalHandle} />}
+            {open && (
+                <Modal extraClass={constructorStyle.modal} closeModalHandle={closeModalHandle}>
+                    {!order ? (
+                        <>
+                            {error ? <div className={constructorStyle.error}>{error}</div> : <Loader />}
+                        </>
+                    ) : <OrderDetails data={order} />}
+                </Modal>
+            )}
             <div style={{}} ref={dropTarget} className={`${constructorStyle.currentList} mb-25`}>
                 {bun ? <ConstructorElement
                     extraClass="ml-7"

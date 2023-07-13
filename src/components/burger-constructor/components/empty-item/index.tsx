@@ -3,7 +3,7 @@ import emptyItemStyle from './style.module.sass';
 
 const EmptyItem: React.FC<TEmptyItemProps> = ({type = EmptyItemTypes.CENTER, text, active = false}) => {
 
-    let extraClass = type === EmptyItemTypes.TOP 
+    const extraClass = type === EmptyItemTypes.TOP 
         ? 'constructor-element_pos_top'
         : (
             type === EmptyItemTypes.BOTTOM
