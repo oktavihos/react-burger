@@ -8,13 +8,13 @@ import { addIngredient, deleteIngredient, resetConstructor, sendOrder } from "..
 import { decrementIngredient, incrementIngredient, resetIngredients } from "../../services/ingredients/ingredients-slice";
 import { useDrop } from "react-dnd";
 import { v4 as uuidv4 } from 'uuid';
-import { BurgerTypes, DragTypes } from "../app/types";
 import { TIngredient } from "../../services/ingredients/ingredients-slice/types";
 import ConstructorDragItem from "./components/drag-item";
 import EmptyItem from "./components/empty-item";
 import { EmptyItemTypes } from "./components/empty-item/types";
 import Modal from "../modal";
 import Loader from "../loader";
+import { BurgerTypes, DragTypes } from "../../global.types";
 
 const BurgerConstructor: React.FC = () => {
 

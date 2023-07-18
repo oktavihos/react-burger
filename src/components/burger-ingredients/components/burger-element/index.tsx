@@ -5,7 +5,7 @@ import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-c
 import { useAppDispatch } from "../../../../services/store";
 import { selectIngredient } from "../../../../services/ingredients/ingredients-slice";
 import { useDrag } from "react-dnd";
-import { DragTypes } from "../../../app/types";
+import { DragTypes } from "../../../../global.types";
 
 const BurgerElement: React.FC<TBurgerElementProps> = React.memo(({data}) => {
 

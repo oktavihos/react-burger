@@ -4,12 +4,12 @@ import BurgerCategory from './components/burger-category';
 import BurgerElement from './components/burger-element';
 import ingridientsStyle from './style.module.sass';
 import { locCategories } from './locale';
-import { BurgerTypes } from '../app/types';
 import IngredientsDetail from './components/ingredients-detail';
 import { useAppSelector, useAppDispatch } from '../../services/store';
 import { unselectIngredient } from '../../services/ingredients/ingredients-slice';
 import { TCategoriesData } from './types';
 import Modal from '../modal';
+import { BurgerTypes } from '../../global.types';
 
 const BurgerIngredients: React.FC = () => {
 

@@ -1,4 +1,4 @@
-import { BurgerTypes } from "../app/types";
+import { BurgerTypes } from "../../global.types";
 import { TCategoriesItem } from "./types";
 
 export const locCategories: TCategoriesItem = {

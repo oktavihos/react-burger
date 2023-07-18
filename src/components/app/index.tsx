@@ -1,43 +1,36 @@
-import AppHeader from "../app-header";
-import BurgerConstructor from "../burger-constructor";
-import BurgerIngridients from "../burger-ingredients";
-import appStyle from './style.module.sass';
-import LoaderPage from "../loader-page";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { useAppDispatch, useAppSelector } from "../../services/store";
-import { useEffect } from "react";
-import { getIngredients } from "../../services/ingredients/ingredients-slice";
-
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ForgotPasswordPage, HomePage, IngredientPage, LoginPage, NotFoundPage, ProfilePage, RegisterPage, ResetPasswordPage } from '../../pages';
 
 const App: React.FC = () => {
-
-    const { isFailed, isLoading } = useAppSelector(state => state.ingredients);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch(getIngredients());
-    }, [dispatch]);
-
     return(
-        <>
-            <AppHeader />
-            <main className={`${appStyle.main} pl-5 pr-5`}>
-                {isLoading ? <LoaderPage /> : (isFailed ? <div className="pt-15 text text_type_main-default">
-                    Произошла ошибка при отправке данных
-                </div> :
-                    <DndProvider backend={HTML5Backend}>
-                        <section className={`${appStyle.section} pr-5`}>
-                            <BurgerIngridients />
-                        </section>
-                        <section className={`${appStyle.section} pl-5 pt-25 pb-10`}>
-                            <BurgerConstructor />
-                        </section>
-                    </DndProvider>
-                )}
-            </main>
-        </>
+        <Router>
+            <Routes>
+                <Route path="/" element={
+                    <HomePage />
+                } />
+                <Route path="/login" element={
+                    <LoginPage />
+                } />
+                <Route path="/register" element={
+                    <RegisterPage />
+                } />
+                <Route path="/forgot-password" element={
+                    <ForgotPasswordPage />
+                } />
+                <Route path="/reset-password" element={
+                    <ResetPasswordPage />
+                } />
+                <Route path="/profile" element={
+                    <ProfilePage />
+                } />
+                <Route path="/ingredients/:id" element={
+                    <IngredientPage />
+                } />
+                <Route path="*" element={
+                    <NotFoundPage />
+                } />
+            </Routes>
+        </Router>
     );
 }
 

@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { TIngredientsState, TIngredient } from "./types";
 import request from "../../../api";
-import { BurgerTypes, TBurgerData } from "../../../components/app/types";
 import { TResponseResult } from "../../../api/types";
+import { BurgerTypes, TBurgerData } from "../../../global.types";
 
 export const initialState: TIngredientsState = {data: [], isLoading: false, isFailed: false};
 

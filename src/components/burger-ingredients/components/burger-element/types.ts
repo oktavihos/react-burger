@@ -1,4 +1,4 @@
-import { TBurgerData } from "../../../app/types";
+import { TBurgerData } from "../../../../global.types";
 
 export type TBurgerElementProps = {
     data: TBurgerData
