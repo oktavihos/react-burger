@@ -1,6 +1,6 @@
 import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const RegisterForm: React.FC = () => {
     const [state, setState] = useState({name: '', email: '', password: ''});
@@ -61,7 +61,7 @@ const RegisterForm: React.FC = () => {
             />
             <Button htmlType="button" type="primary" size="medium" extraClass="mt-6">Зарегистрироваться</Button>
             <div className="mt-20 text text_type_main-default footer-form">
-                <p>Уже зарегистрированы? <NavLink to="/login">Войти</NavLink></p>
+                <p>Уже зарегистрированы? <Link to="/login">Войти</Link></p>
             </div>
         </form>
     );

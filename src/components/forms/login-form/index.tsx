@@ -1,6 +1,6 @@
 import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const LoginForm: React.FC = () => {
 
@@ -51,8 +51,8 @@ const LoginForm: React.FC = () => {
             />
             <Button htmlType="button" type="primary" size="medium" extraClass="mt-6">Войти</Button>
             <div className="mt-20 text text_type_main-default footer-form">
-                <p>Вы — новый пользователь? <NavLink to="/register">Зарегистрироваться</NavLink></p>
-                <p>Забыли пароль? <NavLink to="/reset-password">Восстановить пароль</NavLink></p>
+                <p>Вы — новый пользователь? <Link to="/register">Зарегистрироваться</Link></p>
+                <p>Забыли пароль? <Link to="/reset-password">Восстановить пароль</Link></p>
             </div>
         </form>
     );

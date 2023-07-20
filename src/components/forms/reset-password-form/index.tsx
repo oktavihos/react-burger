@@ -1,6 +1,6 @@
 import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ResetPasswordForm: React.FC = () => {
 
@@ -26,7 +26,7 @@ const ResetPasswordForm: React.FC = () => {
             />
             <Button htmlType="button" type="primary" size="medium" extraClass="mt-6">Восстановить</Button>
             <div className="mt-20 text text_type_main-default footer-form">
-                <p>Вспомнили пароль? <NavLink to="/login">Войти</NavLink></p>
+                <p>Вспомнили пароль? <Link to="/login">Войти</Link></p>
             </div>
         </form>
     );
