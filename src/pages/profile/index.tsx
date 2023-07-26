@@ -14,8 +14,10 @@ const ProfilePage: React.FC = () => {
 
     const logoutHandler = useCallback((e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        dispatch(logoutFetch()).then(() => {
-            dispatch(reset());
+        dispatch(logoutFetch()).then((action) => {
+            if(action.meta.requestStatus === "fulfilled"){
+                dispatch(reset());
+            }
         });
     }, [dispatch]);
 
