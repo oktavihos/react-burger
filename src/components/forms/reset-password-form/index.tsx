@@ -21,8 +21,10 @@ const ResetPasswordForm: React.FC = () => {
 
     const sendForm = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        dispatch(resetPasswordFetch(data)).then(() => {
-            navigate('/login', {state: location.state});
+        dispatch(resetPasswordFetch(data)).then((action) => {
+            if(action.meta.requestStatus === 'fulfilled'){
+                navigate('/login', {state: location.state});
+            }
         })
     }
 

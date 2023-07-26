@@ -18,8 +18,10 @@ const ForgotPasswordPage: React.FC = () => {
 
     const sendForm = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        dispatch(forgotPasswordFetch(data)).then(() => {
-            navigate('/reset-password', {state: location.state});
+        dispatch(forgotPasswordFetch(data)).then((action) => {
+            if(action.meta.requestStatus === 'fulfilled'){
+                navigate('/reset-password', {state: location.state});
+            }
         });
     }
 
