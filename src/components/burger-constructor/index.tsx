@@ -15,12 +15,15 @@ import { EmptyItemTypes } from "./components/empty-item/types";
 import Modal from "../modal";
 import Loader from "../loader";
 import { BurgerTypes, DragTypes } from "../../global.types";
+import { useNavigate } from "react-router";
 
 const BurgerConstructor: React.FC = () => {
 
     const [open, setOpen] = useState(false);
     const { data, bun, order, error = undefined } = useAppSelector(state => state.burgerConstructor);
     const dispatch = useAppDispatch();
+    const isAuth = useAppSelector(state => state.profile.isAuth);
+    const navigate = useNavigate();
 
     const [total, orderItems] = useMemo<[number, TOrderItems]>(() => {
         let total: number = 0;
@@ -53,8 +56,11 @@ const BurgerConstructor: React.FC = () => {
 
     const submitOrderHandle = () => {
         if(!bun || data.length === 0) return false;
-        setOpen(true);
-        dispatch(sendOrder(orderItems));
+        if(!isAuth) navigate('/login');
+        else{
+            setOpen(true);
+            dispatch(sendOrder(orderItems));
+        }
     }
 
     const [{item, isHover}, dropTarget] = useDrop({

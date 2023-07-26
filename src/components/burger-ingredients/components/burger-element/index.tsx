@@ -2,17 +2,17 @@ import React from "react";
 import { TBurgerElementProps } from "./types";
 import elementStyle from './style.module.sass';
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useAppDispatch } from "../../../../services/store";
-import { selectIngredient } from "../../../../services/ingredients/ingredients-slice";
 import { useDrag } from "react-dnd";
 import { DragTypes } from "../../../../global.types";
+import { useLocation, useNavigate } from "react-router";
 
 const BurgerElement: React.FC<TBurgerElementProps> = React.memo(({data}) => {
 
-    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const selectIngredientHandle = () => {
-        dispatch(selectIngredient(data));
+        navigate(`/ingredients/${data._id}`, {state: {backgroundLocation: location}})
     }
 
     const [{ opacity }, dragRef] = useDrag(

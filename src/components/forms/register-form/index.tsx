@@ -1,67 +1,72 @@
 import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { FormEvent, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../services/store";
+import Loader from "../../loader";
+import { registerFetch, setFields } from "../../../services/register/register-slice";
 
 const RegisterForm: React.FC = () => {
-    const [state, setState] = useState({name: '', email: '', password: ''});
+    const dispatch = useAppDispatch();
+    const {isLoading, isFailed, error, data} = useAppSelector(state => state.register);
+    const [viewPassword, setViewPassword] = useState(false);
+    const location = useLocation();
 
     const setValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setState({...state, [e.target.name]: e.target.value})
+        dispatch(setFields({key: e.target.name, value: e.target.value}));
     }
 
-    const refPassword = useRef<HTMLInputElement>(null);
+    const viewPasswordHandler = () => {
+        setViewPassword(!viewPassword);
+    }
 
-    const viewPassword = () => {
-        if(refPassword.current){
-            const currentType = refPassword.current.type === 'text'
-                ? 'password' 
-                : 'text';
-            refPassword.current.type = currentType;
-        }
+    const sendForm = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        dispatch(registerFetch(data));
     }
 
     return (
-        <form className="text-center">
+        <form onSubmit={sendForm} className="text-center">
             <div className="text text_type_main-medium">Регистрация</div>
-            <Input
-                type={'text'}
-                placeholder={'Имя'}
-                onChange={setValue}
-                value={state.name}
-                name={'name'}
-                error={false}
-                errorText={'Ошибка'}
-                size={'default'}
-                extraClass="mt-6"
-            />
-            <Input
-                type={'text'}
-                placeholder={'E-mail'}
-                onChange={setValue}
-                value={state.email}
-                name={'email'}
-                error={false}
-                errorText={'Ошибка'}
-                size={'default'}
-                extraClass="mt-6"
-            />
-            <Input
-                type={'password'}
-                placeholder={'Пароль'}
-                onChange={setValue}
-                icon={'ShowIcon'}
-                ref={refPassword}
-                value={state.password}
-                name={'password'}
-                onIconClick={viewPassword}
-                error={false}
-                errorText={'Ошибка'}
-                size={'default'}
-                extraClass="mt-6"
-            />
-            <Button htmlType="button" type="primary" size="medium" extraClass="mt-6">Зарегистрироваться</Button>
+            <div className="loader-wrapper mt-6">
+                {isLoading ? <div className="loader-container"><Loader /></div> : ''}
+                <Input
+                    type={'text'}
+                    placeholder={'Имя'}
+                    onChange={setValue}
+                    autoComplete="off"
+                    value={data.name ?? ''}
+                    name={'name'}
+                    size={'default'}
+                />
+                <Input
+                    type={'text'}
+                    placeholder={'E-mail'}
+                    onChange={setValue}
+                    value={data.email}
+                    name={'email'}
+                    size={'default'}
+                    autoComplete="off"
+                    extraClass="mt-6"
+                    required
+                />
+                <Input
+                    type={viewPassword ? 'text' : 'password'}
+                    placeholder={'Пароль'}
+                    onChange={setValue}
+                    icon={viewPassword ? 'HideIcon' : 'ShowIcon'}
+                    value={data.password}
+                    name={'password'}
+                    onIconClick={viewPasswordHandler}
+                    autoComplete="off"
+                    size={'default'}
+                    extraClass="mt-6"
+                    required
+                />
+                {isFailed ? <div className="form-error mt-6">{error}</div> : ''}
+                <Button htmlType="submit" type="primary" size="medium" extraClass="mt-6">Зарегистрироваться</Button>
+            </div>
             <div className="mt-20 text text_type_main-default footer-form">
-                <p>Уже зарегистрированы? <Link to="/login">Войти</Link></p>
+                <p>Уже зарегистрированы? <Link to="/login" state={location.state}>Войти</Link></p>
             </div>
         </form>
     );

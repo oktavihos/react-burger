@@ -1,14 +1,11 @@
-import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import BurgerCategory from './components/burger-category';
 import BurgerElement from './components/burger-element';
 import ingridientsStyle from './style.module.sass';
 import { locCategories } from './locale';
-import IngredientsDetail from './components/ingredients-detail';
-import { useAppSelector, useAppDispatch } from '../../services/store';
-import { unselectIngredient } from '../../services/ingredients/ingredients-slice';
+import { useAppSelector } from '../../services/store';
 import { TCategoriesData } from './types';
-import Modal from '../modal';
 import { BurgerTypes } from '../../global.types';
 
 const BurgerIngredients: React.FC = () => {
@@ -17,8 +14,7 @@ const BurgerIngredients: React.FC = () => {
     const observer = useRef<IntersectionObserver | null>(null);
     const titleRef = useRef<(HTMLHeadingElement | null)[]>([]);
 
-    const dispatch = useAppDispatch();
-    const { data, select, error = undefined } = useAppSelector(state => {
+    const { data, error = undefined } = useAppSelector(state => {
         return state.ingredients
     });
 
@@ -40,10 +36,6 @@ const BurgerIngredients: React.FC = () => {
         };
 
     }, []);
-
-    const closeModalHandle = useCallback(() => {
-        dispatch(unselectIngredient());
-    }, [dispatch]);
 
     const categoriesData: TCategoriesData[] = useMemo(() => {
         const result: TCategoriesData[] = [];
@@ -69,10 +61,6 @@ const BurgerIngredients: React.FC = () => {
 
     return (
         <>
-            {select && <Modal title="Детали ингредиента" closeModalHandle={closeModalHandle}>
-                <IngredientsDetail data={select} />
-            </Modal>}
-            
             {error ? error : (
                 <>
                     <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>

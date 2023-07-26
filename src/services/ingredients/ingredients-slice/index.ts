@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { TIngredientsState, TIngredient } from "./types";
+import { TIngredientsState } from "./types";
 import request from "../../../api";
 import { TResponseResult } from "../../../api/types";
 import { BurgerTypes, TBurgerData } from "../../../global.types";
@@ -54,14 +54,6 @@ const ingredientsSlice = createSlice({
             );
 
             return state;
-        },
-        selectIngredient: (state, action: PayloadAction<TIngredient>) => {
-            state.select = action.payload;
-            return state;
-        },
-        unselectIngredient: state => {
-            state.select = undefined;
-            return state;
         }
     },
     extraReducers: builder => {
@@ -76,8 +68,6 @@ export const {
     incrementIngredient, 
     decrementIngredient, 
     resetIngredients, 
-    selectIngredient, 
-    unselectIngredient
 } = ingredientsSlice.actions;
 
 export default ingredientsSlice.reducer;

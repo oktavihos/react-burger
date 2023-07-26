@@ -3,20 +3,13 @@ import MainTemplate from "../../templates/main";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import LoaderPage from "../../components/loader-page";
 import homeStyle from "./style.module.sass";
-import { useEffect } from "react";
-import { getIngredients } from "../../services/ingredients/ingredients-slice";
-import { useAppDispatch, useAppSelector } from "../../services/store";
+import { useAppSelector } from "../../services/store";
 import BurgerIngridients from "../../components/burger-ingredients";
 import BurgerConstructor from "../../components/burger-constructor";
 
 const HomePage: React.FC = () => {
 
     const { isFailed, isLoading } = useAppSelector(state => state.ingredients);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch(getIngredients());
-    }, [dispatch]);
     
     return (
         <MainTemplate>
