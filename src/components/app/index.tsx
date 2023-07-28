@@ -17,6 +17,7 @@ import { getUser } from '../../services/profile/profile-slice';
 import Modal from '../modal';
 import IngredientsDetail from '../burger-ingredients/components/ingredients-detail';
 import { ProfileForm } from '../forms';
+import RoutesList from '../../services/routes';
 
 const App: React.FC = () => {
 
@@ -34,43 +35,43 @@ const App: React.FC = () => {
         <>
             <Routes location={state?.backgroundLocation || location}>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={
+                <Route path={RoutesList.LOGIN} element={
                     <ProtectedRoute onlyUnAuth>
                         <LoginPage />
                     </ProtectedRoute>
                 } />
-                <Route path="/register" element={
+                <Route path={RoutesList.REGISTER} element={
                     <ProtectedRoute onlyUnAuth>
                         <RegisterPage />
                     </ProtectedRoute>
                 } />
-                <Route path="/forgot-password" element={
+                <Route path={RoutesList.FORGOT_PASSWORD} element={
                     <ProtectedRoute onlyUnAuth>
                         <ForgotPasswordPage />
                     </ProtectedRoute>
                 } />
-                <Route path="/reset-password" element={
+                <Route path={RoutesList.RESET_PASSWORD} element={
                     <ProtectedRoute onlyUnAuth>
                         <ResetPasswordPage />
                     </ProtectedRoute>
                 } />
-                <Route path="/profile" element={
+                <Route path={RoutesList.PROFILE} element={
                     <ProtectedRoute>
                         <ProfilePage />
                     </ProtectedRoute>
                 }>
-                    <Route path='orders' element={
+                    <Route path={RoutesList.PROFILE_ORDERS} element={
                         <div className='text text_type_main-default'>Здесь будет история заказов</div>
                     } />
-                    <Route path='' element={<ProfileForm />} />
+                    <Route path={RoutesList.PROFILE} element={<ProfileForm />} />
                 </Route>
-                <Route path="/ingredients/:id" element={<IngredientPage />} />
+                <Route path={RoutesList.INGREDIENT_DETAIL} element={<IngredientPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
 
             {state?.backgroundLocation && (
                 <Routes>
-                    <Route path="/ingredients/:id" element={
+                    <Route path={RoutesList.INGREDIENT_DETAIL} element={
                         <Modal title="Детали ингредиента" closeModalHandle={() => navigate(-1)}>
                             <IngredientsDetail />
                         </Modal>

@@ -31,3 +31,7 @@ export type TRequestThunk = {
     isSuccess?: boolean
     error?: string
 };
+
+export type ObjectKeyString<T> = {
+    [key: string]: T
+}

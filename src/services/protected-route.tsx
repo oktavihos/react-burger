@@ -2,6 +2,7 @@ import React from "react";
 import { useAppSelector } from "./store";
 import { Navigate, useLocation } from "react-router";
 import LoaderPage from "../components/loader-page";
+import RoutesList from "./routes";
 
 const ProtectedRoute: React.FC<{children: React.ReactElement, onlyUnAuth?: boolean}> = ({children, onlyUnAuth = false}) => {
 
@@ -15,7 +16,7 @@ const ProtectedRoute: React.FC<{children: React.ReactElement, onlyUnAuth?: boole
     }
 
     if(!onlyUnAuth && !isAuth){
-        return <Navigate to="/login" replace state={{from: location}} />
+        return <Navigate to={RoutesList.LOGIN} replace state={{from: location}} />
     }
 
     return isLoading ? <LoaderPage /> : children;

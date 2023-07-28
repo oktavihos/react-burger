@@ -3,27 +3,31 @@ import { FormEvent } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../services/store";
 import Loader from "../../loader";
-import { resetPasswordFetch, setFields } from "../../../services/reset-password/reset-password-slice";
+import { resetPasswordFetch } from "../../../services/reset-password/reset-password-slice";
+import RoutesList from "../../../services/routes";
+import { TResetPasswordData } from "../../../services/reset-password/reset-password-slice/types";
+import { useForm } from "../../../hooks";
+
+const initialStateResetPassword: TResetPasswordData = {
+    password: '', token: ''
+};
 
 const ResetPasswordForm: React.FC = () => {
 
     const dispatch = useAppDispatch();
-    const {isLoading, isFailed, error, data} = useAppSelector(state => state.resetPassword);
+    const {isLoading, isFailed, error} = useAppSelector(state => state.resetPassword);
     const isForgotSuccess = useAppSelector(state => state.forgotPassword.isSuccess);
     const location = useLocation();
     const navigate = useNavigate();
+    const { values, handleChange } = useForm<TResetPasswordData>(initialStateResetPassword);
 
-    if(!isForgotSuccess) return <Navigate to={'/forgot-password'} state={location.state} />
-
-    const setValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(setFields({key: e.target.name, value: e.target.value}));
-    }
+    if(!isForgotSuccess) return <Navigate to={RoutesList.FORGOT_PASSWORD} state={location.state} />
 
     const sendForm = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        dispatch(resetPasswordFetch(data)).then((action) => {
+        dispatch(resetPasswordFetch(values)).then((action) => {
             if(action.meta.requestStatus === 'fulfilled'){
-                navigate('/login', {state: location.state});
+                navigate(RoutesList.LOGIN, {state: location.state});
             }
         })
     }
@@ -36,8 +40,8 @@ const ResetPasswordForm: React.FC = () => {
                 <Input
                     type={'password'}
                     placeholder={'Введите новый пароль'}
-                    onChange={setValue}
-                    value={data.password}
+                    onChange={handleChange}
+                    value={values.password}
                     autoComplete="off"
                     name={'password'}
                     size={'default'}
@@ -46,8 +50,8 @@ const ResetPasswordForm: React.FC = () => {
                 <Input
                     type={'text'}
                     placeholder={'Введите код из письма'}
-                    onChange={setValue}
-                    value={data.token}
+                    onChange={handleChange}
+                    value={values.token}
                     name={'token'}
                     autoComplete="off"
                     size={'default'}
@@ -58,7 +62,7 @@ const ResetPasswordForm: React.FC = () => {
                 <Button htmlType="submit" type="primary" size="medium" extraClass="mt-6">Восстановить</Button>
             </div>
             <div className="mt-20 text text_type_main-default footer-form">
-                <p>Вспомнили пароль? <Link to="/login" state={location.state}>Войти</Link></p>
+                <p>Вспомнили пароль? <Link to={RoutesList.LOGIN} state={location.state}>Войти</Link></p>
             </div>
         </form>
     );

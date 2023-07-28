@@ -3,17 +3,21 @@ import { FormEvent, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../services/store";
 import Loader from "../../loader";
-import { registerFetch, setFields } from "../../../services/register/register-slice";
+import { registerFetch } from "../../../services/register/register-slice";
+import RoutesList from "../../../services/routes";
+import { useForm } from "../../../hooks";
+import { TRegisterData } from "../../../services/register/register-slice/types";
+
+const initialStateRegister: TRegisterData = {
+    name: '', email: '', password: ''
+};
 
 const RegisterForm: React.FC = () => {
     const dispatch = useAppDispatch();
-    const {isLoading, isFailed, error, data} = useAppSelector(state => state.register);
+    const {isLoading, isFailed, error} = useAppSelector(state => state.register);
     const [viewPassword, setViewPassword] = useState(false);
     const location = useLocation();
-
-    const setValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(setFields({key: e.target.name, value: e.target.value}));
-    }
+    const { values, handleChange } = useForm<TRegisterData>(initialStateRegister);
 
     const viewPasswordHandler = () => {
         setViewPassword(!viewPassword);
@@ -21,7 +25,7 @@ const RegisterForm: React.FC = () => {
 
     const sendForm = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        dispatch(registerFetch(data));
+        dispatch(registerFetch(values));
     }
 
     return (
@@ -32,17 +36,17 @@ const RegisterForm: React.FC = () => {
                 <Input
                     type={'text'}
                     placeholder={'Имя'}
-                    onChange={setValue}
+                    onChange={handleChange}
                     autoComplete="off"
-                    value={data.name ?? ''}
+                    value={values.name ?? ''}
                     name={'name'}
                     size={'default'}
                 />
                 <Input
                     type={'text'}
                     placeholder={'E-mail'}
-                    onChange={setValue}
-                    value={data.email}
+                    onChange={handleChange}
+                    value={values.email}
                     name={'email'}
                     size={'default'}
                     autoComplete="off"
@@ -52,9 +56,9 @@ const RegisterForm: React.FC = () => {
                 <Input
                     type={viewPassword ? 'text' : 'password'}
                     placeholder={'Пароль'}
-                    onChange={setValue}
+                    onChange={handleChange}
                     icon={viewPassword ? 'HideIcon' : 'ShowIcon'}
-                    value={data.password}
+                    value={values.password}
                     name={'password'}
                     onIconClick={viewPasswordHandler}
                     autoComplete="off"
@@ -66,7 +70,7 @@ const RegisterForm: React.FC = () => {
                 <Button htmlType="submit" type="primary" size="medium" extraClass="mt-6">Зарегистрироваться</Button>
             </div>
             <div className="mt-20 text text_type_main-default footer-form">
-                <p>Уже зарегистрированы? <Link to="/login" state={location.state}>Войти</Link></p>
+                <p>Уже зарегистрированы? <Link to={RoutesList.LOGIN} state={location.state}>Войти</Link></p>
             </div>
         </form>
     );

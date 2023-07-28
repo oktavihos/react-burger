@@ -40,23 +40,11 @@ const profileSlice = createSlice({
     name: 'profile',
     initialState: initialState,
     reducers: {
-        setFields: (state, action: PayloadAction<{key: string, value: string}>) => {
-            return {...state, requests: {...state.requests, updateUser: {
-                ...state.requests.updateUser, data: {
-                    ...state.requests.updateUser.data, [action.payload.key]: action.payload.value
-                }
-            }}}
-        },
         setData: (state, action: PayloadAction<TUser>) => {
             return {...state, user: action.payload, isAuth: true};
         },
         reset: () => {
             return initialState;
-        },
-        resetUpdateUser: (state) => {
-            return {...state, requests: {
-                ...state.requests, updateUser: initialState.requests.updateUser
-            }}
         }
     },
     extraReducers: builder => {
@@ -103,6 +91,6 @@ const profileSlice = createSlice({
     }
 });
 
-export const { setFields, setData, reset, resetUpdateUser } = profileSlice.actions;
+export const { setData, reset } = profileSlice.actions;
 
 export default profileSlice.reducer;

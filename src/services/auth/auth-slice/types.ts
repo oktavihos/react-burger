@@ -6,6 +6,6 @@ export type TUserData = {
 };
 
 export type TInitialStateLogin = {
-    login: TRequestThunk & {data: TUserData},
+    login: TRequestThunk,
     logout: TRequestThunk
 };

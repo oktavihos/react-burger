@@ -3,24 +3,26 @@ import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-component
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../services/store";
 import Loader from "../../loader";
-import { forgotPasswordFetch, setFields } from "../../../services/forgot-password/forgot-password-slice";
+import { forgotPasswordFetch } from "../../../services/forgot-password/forgot-password-slice";
+import RoutesList from "../../../services/routes";
+import { useForm } from "../../../hooks";
+import { TForgotPasswordData } from "../../../services/forgot-password/forgot-password-slice/types";
+
+const initialStateForgotPassword: TForgotPasswordData = {email: ''};
 
 const ForgotPasswordPage: React.FC = () => {
 
     const dispatch = useAppDispatch();
-    const {isLoading, isFailed, error, data} = useAppSelector(state => state.forgotPassword);
+    const {isLoading, isFailed, error} = useAppSelector(state => state.forgotPassword);
+    const { values, handleChange } = useForm<TForgotPasswordData>(initialStateForgotPassword);
     const location = useLocation();
     const navigate = useNavigate();
-    
-    const setValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(setFields({key: e.target.name, value: e.target.value}));
-    }
 
     const sendForm = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        dispatch(forgotPasswordFetch(data)).then((action) => {
+        dispatch(forgotPasswordFetch(values)).then((action) => {
             if(action.meta.requestStatus === 'fulfilled'){
-                navigate('/reset-password', {state: location.state});
+                navigate(RoutesList.RESET_PASSWORD, {state: location.state});
             }
         });
     }
@@ -33,8 +35,8 @@ const ForgotPasswordPage: React.FC = () => {
                 <Input
                     type={'text'}
                     placeholder={'E-mail'}
-                    onChange={setValue}
-                    value={data.email}
+                    onChange={handleChange}
+                    value={values.email}
                     name={'email'}
                     size={'default'}
                     autoComplete="off"
@@ -44,7 +46,7 @@ const ForgotPasswordPage: React.FC = () => {
                 <Button htmlType="submit" type="primary" size="medium" extraClass="mt-6">Восстановить</Button>
             </div>
             <div className="mt-20 text text_type_main-default footer-form">
-                <p>Вспомнили пароль? <Link to="/login" state={location.state}>Войти</Link></p>
+                <p>Вспомнили пароль? <Link to={RoutesList.LOGIN} state={location.state}>Войти</Link></p>
             </div>
         </form>
     );

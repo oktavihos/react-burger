@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from '@reduxjs/toolkit'
 import { TUserData, TInitialStateLogin } from "./types";
 import request from "../../../api";
 import { TResponseResultMessage } from "../../../api/types";
 import { TProfileResponse } from "../../profile/profile-slice/types";
 import { setData } from "../../profile/profile-slice";
+import { ACCESS_TOKEN_FIELD, REFRESH_TOKEN_FIELD } from "../../../config/api";
 
 const InitialStateThunk = {
     isLoading: false, 
@@ -13,7 +13,7 @@ const InitialStateThunk = {
 };
 
 export const initialState: TInitialStateLogin = {
-    login: {...InitialStateThunk, data: {email: '', password: ''}},
+    login: InitialStateThunk,
     logout: InitialStateThunk
 };
 
@@ -21,8 +21,8 @@ export const loginFetch = createAsyncThunk(
     "auth/loginFetch",
     async (data: TUserData, { dispatch }) => {
         const result = await request<TProfileResponse>('auth/login', 'POST', data);
-        localStorage.setItem("accessToken", result.accessToken);
-        localStorage.setItem("refreshToken", result.refreshToken);
+        localStorage.setItem(ACCESS_TOKEN_FIELD, result.accessToken);
+        localStorage.setItem(REFRESH_TOKEN_FIELD, result.refreshToken);
         dispatch(setData(result.user));
         return result.user;
     }
@@ -33,8 +33,8 @@ export const logoutFetch = createAsyncThunk(
     async () => {
         const refreshToken = localStorage.getItem("refreshToken");
         const result = await request<TResponseResultMessage>('auth/logout', 'POST', {token: refreshToken});
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+        localStorage.removeItem(ACCESS_TOKEN_FIELD);
+        localStorage.removeItem(REFRESH_TOKEN_FIELD);
         return result;
     }
 );
@@ -42,15 +42,7 @@ export const logoutFetch = createAsyncThunk(
 const authSlice = createSlice({
     name: 'auth',
     initialState: initialState,
-    reducers: {
-        setFields: (state, action: PayloadAction<{key: string, value: string}>) => {
-            return {...state, login: {
-                ...state.login, data: {
-                    ...state.login.data, [action.payload.key]: action.payload.value
-                }
-            }}
-        }
-    },
+    reducers: {},
     extraReducers: builder => {
         builder
         .addCase(loginFetch.fulfilled, state => ({
@@ -78,7 +70,5 @@ const authSlice = createSlice({
         }))
     }
 });
-
-export const { setFields } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from '@reduxjs/toolkit'
-import { TInitialStateForgotPassword, TForgotPasswordData } from "./types";
+import { TForgotPasswordData } from "./types";
 import { TResponseResultMessage } from "../../../api/types";
 import request from "../../../api";
+import { TRequestThunk } from "../../../global.types";
 
-export const initialState: TInitialStateForgotPassword = {data: {email: ''}, isLoading: false, isFailed: false, isSuccess: false};
+export const initialState: TRequestThunk = {isLoading: false, isFailed: false, isSuccess: false};
 
 export const forgotPasswordFetch = createAsyncThunk(
     "forgotPassword/forgotPasswordFetch",
@@ -17,11 +17,7 @@ export const forgotPasswordFetch = createAsyncThunk(
 const forgotPasswordSlice = createSlice({
     name: 'forgotPassword',
     initialState: initialState,
-    reducers: {
-        setFields: (state, action: PayloadAction<{key: string, value: string}>) => {
-            return {...state, data: {...state.data, [action.payload.key]: action.payload.value}}
-        }
-    },
+    reducers: {},
     extraReducers: builder => {
         builder
         .addCase(forgotPasswordFetch.fulfilled, () => ({
@@ -33,7 +29,5 @@ const forgotPasswordSlice = createSlice({
         }))
     }
 });
-
-export const { setFields } = forgotPasswordSlice.actions;
 
 export default forgotPasswordSlice.reducer;

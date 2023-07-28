@@ -1,4 +1,5 @@
 import request from "..";
+import { ACCESS_TOKEN_FIELD } from "../../config/api";
 import refreshToken from "../refresh-token";
 
 const securityRequest = async <T = any>(
@@ -7,7 +8,7 @@ const securityRequest = async <T = any>(
     body?: Object
 ): Promise<T> => {
     try{
-        const accessToken = localStorage.getItem('accessToken');
+        const accessToken = localStorage.getItem(ACCESS_TOKEN_FIELD);
         if(!accessToken) return Promise.reject("Пользователь не авторизован");
         return await request<T>(endpoint, method, body, {authorization: accessToken});
     }catch(error: any){

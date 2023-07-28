@@ -16,6 +16,7 @@ import Modal from "../modal";
 import Loader from "../loader";
 import { BurgerTypes, DragTypes } from "../../global.types";
 import { useNavigate } from "react-router";
+import RoutesList from "../../services/routes";
 
 const BurgerConstructor: React.FC = () => {
 
@@ -56,7 +57,7 @@ const BurgerConstructor: React.FC = () => {
 
     const submitOrderHandle = () => {
         if(!bun || data.length === 0) return false;
-        if(!isAuth) navigate('/login');
+        if(!isAuth) navigate(RoutesList.LOGIN);
         else{
             setOpen(true);
             dispatch(sendOrder(orderItems));
