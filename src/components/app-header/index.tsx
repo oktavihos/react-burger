@@ -27,7 +27,7 @@ const AppHeader: React.FC = () => {
                 <div className={headerStyle.headerRight}>
                     <NavLink to={RoutesList.PROFILE} className={`btn_icon btn_icon_primary pl-5 pr-5 pt-4 pb-4`}>
                         <ProfileIcon type="secondary" />
-                        <span className='ml-2'>{user ? user.name : <>Личный кабинет</>}</span>
+                        <span className='ml-2'>{user?.name ? user.name : <>Личный кабинет</>}</span>
                     </NavLink>
                 </div>
             </div>
