@@ -1,42 +1,83 @@
-import AppHeader from "../app-header";
-import BurgerConstructor from "../burger-constructor";
-import BurgerIngridients from "../burger-ingredients";
-import appStyle from './style.module.sass';
-import LoaderPage from "../loader-page";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { useAppDispatch, useAppSelector } from "../../services/store";
-import { useEffect } from "react";
-import { getIngredients } from "../../services/ingredients/ingredients-slice";
-
-
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { 
+    ForgotPasswordPage, 
+    HomePage, 
+    IngredientPage, 
+    LoginPage, 
+    NotFoundPage, 
+    ProfilePage, 
+    RegisterPage, 
+    ResetPasswordPage 
+} from '../../pages';
+import ProtectedRoute from '../../services/protected-route';
+import { useAppDispatch } from '../../services/store';
+import { useEffect } from 'react';
+import { getIngredients } from '../../services/ingredients/ingredients-slice';
+import { getUser } from '../../services/profile/profile-slice';
+import Modal from '../modal';
+import IngredientsDetail from '../burger-ingredients/components/ingredients-detail';
+import { ProfileForm } from '../forms';
+import RoutesList from '../../services/routes';
 
 const App: React.FC = () => {
 
-    const { isFailed, isLoading } = useAppSelector(state => state.ingredients);
     const dispatch = useAppDispatch();
+    const  location = useLocation();
+    const state = location.state as { backgroundLocation?: Location };
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(getIngredients());
+        dispatch(getUser());
     }, [dispatch]);
 
     return(
         <>
-            <AppHeader />
-            <main className={`${appStyle.main} pl-5 pr-5`}>
-                {isLoading ? <LoaderPage /> : (isFailed ? <div className="pt-15 text text_type_main-default">
-                    Произошла ошибка при отправке данных
-                </div> :
-                    <DndProvider backend={HTML5Backend}>
-                        <section className={`${appStyle.section} pr-5`}>
-                            <BurgerIngridients />
-                        </section>
-                        <section className={`${appStyle.section} pl-5 pt-25 pb-10`}>
-                            <BurgerConstructor />
-                        </section>
-                    </DndProvider>
-                )}
-            </main>
+            <Routes location={state?.backgroundLocation || location}>
+                <Route path="/" element={<HomePage />} />
+                <Route path={RoutesList.LOGIN} element={
+                    <ProtectedRoute onlyUnAuth>
+                        <LoginPage />
+                    </ProtectedRoute>
+                } />
+                <Route path={RoutesList.REGISTER} element={
+                    <ProtectedRoute onlyUnAuth>
+                        <RegisterPage />
+                    </ProtectedRoute>
+                } />
+                <Route path={RoutesList.FORGOT_PASSWORD} element={
+                    <ProtectedRoute onlyUnAuth>
+                        <ForgotPasswordPage />
+                    </ProtectedRoute>
+                } />
+                <Route path={RoutesList.RESET_PASSWORD} element={
+                    <ProtectedRoute onlyUnAuth>
+                        <ResetPasswordPage />
+                    </ProtectedRoute>
+                } />
+                <Route path={RoutesList.PROFILE} element={
+                    <ProtectedRoute>
+                        <ProfilePage />
+                    </ProtectedRoute>
+                }>
+                    <Route path={RoutesList.PROFILE_ORDERS} element={
+                        <div className='text text_type_main-default'>Здесь будет история заказов</div>
+                    } />
+                    <Route path={RoutesList.PROFILE} element={<ProfileForm />} />
+                </Route>
+                <Route path={RoutesList.INGREDIENT_DETAIL} element={<IngredientPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+
+            {state?.backgroundLocation && (
+                <Routes>
+                    <Route path={RoutesList.INGREDIENT_DETAIL} element={
+                        <Modal title="Детали ингредиента" closeModalHandle={() => navigate(-1)}>
+                            <IngredientsDetail />
+                        </Modal>
+                    } />
+                </Routes>
+            )}
         </>
     );
 }

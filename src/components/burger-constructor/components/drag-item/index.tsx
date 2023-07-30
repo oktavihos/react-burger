@@ -1,12 +1,12 @@
 import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import constructorItemStyle from './style.module.sass';
 import { TConstructorDragItem, TConstructorDragItemProps } from "./type";
-import { DragTypes } from "../../../app/types";
 import { useDrag, useDrop } from "react-dnd";
 import { useRef } from "react";
 import { Identifier, XYCoord } from "dnd-core";
 import { useAppDispatch } from "../../../../services/store";
 import { sortConstructor } from "../../../../services/constructor/constructor-slice";
+import { DragTypes } from "../../../../global.types";
 
 const ConstructorDragItem: React.FC<TConstructorDragItemProps> = ({item, index, deleteItemHandle}) => {
 

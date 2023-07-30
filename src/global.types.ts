@@ -24,3 +24,14 @@ export enum DragTypes {
     INGREDIENTS = 'ingredients',
     SORT_CONSTRUCTOR = 'constructor'
 };
+
+export type TRequestThunk = {
+    isFailed: boolean,
+    isLoading: boolean,
+    isSuccess?: boolean
+    error?: string
+};
+
+export type ObjectKeyString<T> = {
+    [key: string]: T
+}

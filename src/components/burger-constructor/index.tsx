@@ -8,19 +8,23 @@ import { addIngredient, deleteIngredient, resetConstructor, sendOrder } from "..
 import { decrementIngredient, incrementIngredient, resetIngredients } from "../../services/ingredients/ingredients-slice";
 import { useDrop } from "react-dnd";
 import { v4 as uuidv4 } from 'uuid';
-import { BurgerTypes, DragTypes } from "../app/types";
 import { TIngredient } from "../../services/ingredients/ingredients-slice/types";
 import ConstructorDragItem from "./components/drag-item";
 import EmptyItem from "./components/empty-item";
 import { EmptyItemTypes } from "./components/empty-item/types";
 import Modal from "../modal";
 import Loader from "../loader";
+import { BurgerTypes, DragTypes } from "../../global.types";
+import { useNavigate } from "react-router";
+import RoutesList from "../../services/routes";
 
 const BurgerConstructor: React.FC = () => {
 
     const [open, setOpen] = useState(false);
     const { data, bun, order, error = undefined } = useAppSelector(state => state.burgerConstructor);
     const dispatch = useAppDispatch();
+    const isAuth = useAppSelector(state => state.profile.isAuth);
+    const navigate = useNavigate();
 
     const [total, orderItems] = useMemo<[number, TOrderItems]>(() => {
         let total: number = 0;
@@ -53,8 +57,11 @@ const BurgerConstructor: React.FC = () => {
 
     const submitOrderHandle = () => {
         if(!bun || data.length === 0) return false;
-        setOpen(true);
-        dispatch(sendOrder(orderItems));
+        if(!isAuth) navigate(RoutesList.LOGIN);
+        else{
+            setOpen(true);
+            dispatch(sendOrder(orderItems));
+        }
     }
 
     const [{item, isHover}, dropTarget] = useDrop({
