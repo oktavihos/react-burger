@@ -42,6 +42,7 @@ const ProfileForm: React.FC = () => {
                     name={'name'}
                     autoComplete="off"
                     size={'default'}
+                    required
                 />
                 <Input
                     type={'text'}
@@ -53,6 +54,7 @@ const ProfileForm: React.FC = () => {
                     name={'email'}
                     size={'default'}
                     extraClass="mt-6"
+                    required
                 />
                 <Input
                     type={'password'}
