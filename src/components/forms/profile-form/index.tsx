@@ -1,5 +1,5 @@
 import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
-import { FormEvent } from "react";
+import { FormEvent, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../../services/store";
 import Loader from "../../loader";
 import { updateUser } from "../../../services/profile/profile-slice";
@@ -18,6 +18,12 @@ const ProfileForm: React.FC = () => {
         e.preventDefault();
         if(values) dispatch(updateUser(values));
     }
+
+    const isDisabled = useMemo(() => {
+        return values?.name === user?.name
+            && values?.email === user?.email
+            && !values?.password
+    }, [values, user])
 
     const resetHandler = () => {
         setValues(user);
@@ -61,8 +67,8 @@ const ProfileForm: React.FC = () => {
                 />
                 {isFailed ? <div className="form-error mt-6">{error}</div> : ''}
                 <div className={`mt-6 ${formStyle.buttons}`}>
-                    <Button extraClass={formStyle.cancelButton} onClick={resetHandler} htmlType="button">Отменить</Button>
-                    <Button disabled={!values} extraClass="ml-6" htmlType="submit">Сохранить</Button>
+                    <Button disabled={isDisabled} extraClass={formStyle.cancelButton} onClick={resetHandler} htmlType="button">Отменить</Button>
+                    <Button disabled={isDisabled} extraClass="ml-6" htmlType="submit">Сохранить</Button>
                 </div>
             </div>
         </form>
