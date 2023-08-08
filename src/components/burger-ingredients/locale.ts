@@ -1,7 +1,6 @@
-import { BurgerTypes } from "../../global.types";
-import { TCategoriesItem } from "./types";
+import { BurgerTypes, ObjectKeyString } from "../../global.types";
 
-export const locCategories: TCategoriesItem = {
+export const locCategories: ObjectKeyString<string> = {
     [BurgerTypes.BUN.toString()]: 'Булки',
     [BurgerTypes.SAUSES.toString()]: 'Соусы',
     [BurgerTypes.MAIN.toString()]: 'Начинки'
