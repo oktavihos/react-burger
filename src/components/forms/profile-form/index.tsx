@@ -1,5 +1,5 @@
 import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
-import { FormEvent, useMemo } from "react";
+import { FormEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../../services/store";
 import Loader from "../../loader";
 import { updateUser } from "../../../services/profile/profile-slice";
@@ -19,11 +19,7 @@ const ProfileForm: React.FC = () => {
         if(values) dispatch(updateUser(values));
     }
 
-    const isDisabled = useMemo(() => {
-        return values?.name === user?.name
-            && values?.email === user?.email
-            && !values?.password
-    }, [values, user])
+    const isDisabled = values?.name === user?.name && values?.email === user?.email && !values?.password;
 
     const resetHandler = () => {
         setValues(user);
