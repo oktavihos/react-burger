@@ -56,7 +56,7 @@ const BurgerConstructor: React.FC = () => {
     }, [dispatch, data]);
 
     const submitOrderHandle = () => {
-        if(!bun || data.length === 0) return false;
+        if(!bun || data.length === 0) return;
         if(!isAuth) navigate(RoutesList.LOGIN);
         else{
             setOpen(true);
