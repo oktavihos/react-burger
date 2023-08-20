@@ -1,4 +1,3 @@
-import { FormEvent } from "react";
 import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../services/store";
@@ -18,7 +17,7 @@ const ForgotPasswordPage: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const sendForm = (e: FormEvent<HTMLFormElement>) => {
+    const sendForm = (e: React.ChangeEvent<HTMLFormElement>): void => {
         e.preventDefault();
         dispatch(forgotPasswordFetch(values)).then((action) => {
             if(action.meta.requestStatus === 'fulfilled'){

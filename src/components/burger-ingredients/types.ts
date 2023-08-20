@@ -5,7 +5,3 @@ export type TCategoriesData = {
     type: string,
     title: string
 };
-
-export type TCategoriesItem = {
-    [key: string]: string
-};

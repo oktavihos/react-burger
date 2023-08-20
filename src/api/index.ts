@@ -1,6 +1,6 @@
 import * as Config from '../config/api';
 
-const request = async <T = any>(
+const request = async <T>(
     endpoint: string,
     method: string = 'GET',
     body?: Object,

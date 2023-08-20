@@ -1,5 +1,5 @@
 import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../services/store";
 import Loader from "../../loader";
@@ -22,7 +22,7 @@ const LoginForm: React.FC = () => {
         setViewPassword(!viewPassword);
     }
 
-    const sendForm = (e: FormEvent<HTMLFormElement>) => {
+    const sendForm = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         dispatch(loginFetch(values));
     }
