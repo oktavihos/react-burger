@@ -18,6 +18,8 @@ import Modal from '../modal';
 import IngredientsDetail from '../burger-ingredients/components/ingredients-detail';
 import { ProfileForm } from '../forms';
 import RoutesList from '../../services/routes';
+import FeedPage from '../../pages/feed';
+import OrdersPage from '../../pages/orders';
 
 const App: React.FC = () => {
 
@@ -55,13 +57,22 @@ const App: React.FC = () => {
                         <ResetPasswordPage />
                     </ProtectedRoute>
                 } />
+                <Route path={RoutesList.FEED} element={
+                        <FeedPage />
+                } />
+                <Route path={RoutesList.DETAIL_FEED} element={
+                        3333
+                } />
                 <Route path={RoutesList.PROFILE} element={
                     <ProtectedRoute>
                         <ProfilePage />
                     </ProtectedRoute>
                 }>
                     <Route path={RoutesList.PROFILE_ORDERS} element={
-                        <div className='text text_type_main-default'>Здесь будет история заказов</div>
+                        <OrdersPage />
+                    } />
+                    <Route path={RoutesList.DETAIL_PROFILE_ORDERS} element={
+                        22222
                     } />
                     <Route path={RoutesList.PROFILE} element={<ProfileForm />} />
                 </Route>
@@ -74,6 +85,16 @@ const App: React.FC = () => {
                     <Route path={RoutesList.INGREDIENT_DETAIL} element={
                         <Modal title="Детали ингредиента" closeModalHandle={() => navigate(-1)}>
                             <IngredientsDetail />
+                        </Modal>
+                    } />
+                    <Route path={RoutesList.DETAIL_FEED} element={
+                        <Modal closeModalHandle={() => navigate(-1)}>
+                            111
+                        </Modal>
+                    } />
+                    <Route path={RoutesList.DETAIL_PROFILE_ORDERS} element={
+                        <Modal closeModalHandle={() => navigate(-1)}>
+                            2222
                         </Modal>
                     } />
                 </Routes>

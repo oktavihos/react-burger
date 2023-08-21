@@ -63,7 +63,7 @@ const BurgerIngredients: React.FC = () => {
         <>
             {error ? error : (
                 <>
-                    <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
+                    <h1 className='text text_type_main-large mb-5'>Соберите бургер</h1>
                     <div className={`${ingridientsStyle.tabIngridients} mb-10`}>
                         {Object.keys(locCategories).map((type, index) => {
                             return (

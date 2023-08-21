@@ -23,10 +23,10 @@ const ProfilePage: React.FC = () => {
 
     return (
         <MainTemplate>
-            <div className={`${pageStyle.container} mt-30 loader-wrapper`}>
+            <div className={`${pageStyle.container} loader-wrapper`}>
                 {isFailed ? <div className="form-error mb-6">{error}</div> : ''}
                 {isLoading ? <div className="loader-container"><Loader /></div> : ''}
-                <div className={`${pageStyle.sidebar} mr-15`}>
+                <div className={`${pageStyle.sidebar} mr-15 pt-20`}>
                     <ProfileNavigate logoutHandler={logoutHandler} />
                     <div className={`mt-20 text text_type_main-default ${pageStyle.description}`}>
                         В этом разделе вы можете изменить свои персональные данные

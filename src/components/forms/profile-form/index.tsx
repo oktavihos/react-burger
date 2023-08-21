@@ -26,7 +26,7 @@ const ProfileForm: React.FC = () => {
     }
 
     return (
-        <form onSubmit={submitHandler}>
+        <form onSubmit={submitHandler} className="pt-20">
             <div className="loader-wrapper">
                 {isLoading && <div className="loader-container"><Loader /></div>}
                 <Input

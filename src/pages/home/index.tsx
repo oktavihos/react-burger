@@ -20,7 +20,7 @@ const HomePage: React.FC = () => {
                     <section className={`${homeStyle.section} pr-5`}>
                         <BurgerIngridients />
                     </section>
-                    <section className={`${homeStyle.section} pl-5 pt-25 pb-10`}>
+                    <section className={`${homeStyle.section} pl-5 pt-15 pb-10`}>
                         <BurgerConstructor />
                     </section>
                 </DndProvider>
