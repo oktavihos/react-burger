@@ -1,4 +1,4 @@
-import { TRequestThunk } from "../../../global.types";
+import { TRequestThunk } from "../../global.types";
 
 export type TProfileState = {
     user?: TUser,

@@ -3,12 +3,16 @@
     width: 100%
     background: var(--background)
     border-radius: 40px
-.modalHeader
-    display: flex
-    align-items: center
-    justify-content: space-between
-    svg
-        cursor: pointer
+    position: relative
+    :global(.modalHeader)
+        display: flex
+        align-items: center
+        justify-content: space-between
+        svg
+            cursor: pointer
 .close
-    margin-right: 0
-    justify-self: flex-end
+    position: absolute
+    z-index: 2
+    right: calc(var(--offset-base-size) * 10)
+    top: calc(var(--offset-base-size) * 12)
+    cursor: pointer

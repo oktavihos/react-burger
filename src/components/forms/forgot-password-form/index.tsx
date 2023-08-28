@@ -5,7 +5,7 @@ import Loader from "../../loader";
 import { forgotPasswordFetch } from "../../../services/forgot-password/forgot-password-slice";
 import RoutesList from "../../../services/routes";
 import { useForm } from "../../../hooks";
-import { TForgotPasswordData } from "../../../services/forgot-password/forgot-password-slice/types";
+import { TForgotPasswordData } from "../../../services/forgot-password/types";
 
 const initialStateForgotPassword: TForgotPasswordData = {email: ''};
 

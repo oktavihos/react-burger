@@ -6,11 +6,13 @@ const refreshToken = async () => {
     const token = localStorage.getItem(REFRESH_TOKEN_FIELD);
     try{
         if(!token) return Promise.reject("Не обнаружен токен для обновления");
-        const result = await request<TResultToken>('auth/token', 'POST', {token: token});
+        const result = await request<TResultToken>('auth/token', 'POST', {token: `Bearer ${token}`});
         if(result.success){
-            localStorage.setItem(ACCESS_TOKEN_FIELD, result.accessToken);
-            localStorage.setItem(REFRESH_TOKEN_FIELD, result.refreshToken);
-            return result.accessToken;
+            const accessToken = result.accessToken.split('Bearer ')[1];
+            const refreshToken = result.refreshToken;
+            localStorage.setItem(ACCESS_TOKEN_FIELD, accessToken);
+            localStorage.setItem(REFRESH_TOKEN_FIELD, refreshToken);
+            return accessToken;
         }else{
             return Promise.reject('Произошла ошибка');
         }

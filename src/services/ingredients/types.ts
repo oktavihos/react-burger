@@ -1,4 +1,4 @@
-import { TBurgerData } from "../../../global.types";
+import { TBurgerData } from "../../global.types";
 
 export type TIngredient = TBurgerData & {count?: number};
 

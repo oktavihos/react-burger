@@ -6,15 +6,21 @@ import authReducer from './auth/auth-slice';
 import registerReducer from './register/register-slice';
 import forgotPasswordReducer from './forgot-password/forgot-password-slice';
 import resetPasswordReducer from './reset-password/reset-password-slice';
+import feedReducer from "./feed/feed-slice";
+import ordersReducer from "./orders/orders-slice";
 
-const rootReducer = combineReducers({
+const reducers = {
     burgerConstructor: constructorReducer, 
     ingredients: ingredientsReducer, 
     profile: profileReducer,
     auth: authReducer,
     register: registerReducer,
     forgotPassword: forgotPasswordReducer,
-    resetPassword: resetPasswordReducer
-});
+    resetPassword: resetPasswordReducer,
+    feed: feedReducer,
+    orders: ordersReducer
+};
+
+const rootReducer = combineReducers(reducers);
 
 export default rootReducer;

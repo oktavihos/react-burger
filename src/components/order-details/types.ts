@@ -1,4 +1,4 @@
-import { TOrderData } from "../../services/constructor/constructor-slice/type";
+import { TOrderData } from "../../services/constructor/type";
 
 export type TOrderDetailsProps = {
     data: TOrderData

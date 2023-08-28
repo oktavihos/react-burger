@@ -10,7 +10,7 @@ import { Outlet } from "react-router";
 
 const ProfilePage: React.FC = () => {
     const dispatch = useAppDispatch();
-    const { isFailed, isLoading, error } = useAppSelector(state => state.auth.logout);
+    const { isLoading } = useAppSelector(state => state.auth.logout);
 
     const logoutHandler = useCallback((e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
@@ -24,7 +24,6 @@ const ProfilePage: React.FC = () => {
     return (
         <MainTemplate>
             <div className={`${pageStyle.container} loader-wrapper`}>
-                {isFailed ? <div className="form-error mb-6">{error}</div> : ''}
                 {isLoading ? <div className="loader-container"><Loader /></div> : ''}
                 <div className={`${pageStyle.sidebar} mr-15 pt-20`}>
                     <ProfileNavigate logoutHandler={logoutHandler} />

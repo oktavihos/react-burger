@@ -20,6 +20,8 @@ import { ProfileForm } from '../forms';
 import RoutesList from '../../services/routes';
 import FeedPage from '../../pages/feed';
 import OrdersPage from '../../pages/orders';
+import OrderInfo from '../order-info';
+import OrderInfoPage from '../../pages/order-info';
 
 const App: React.FC = () => {
 
@@ -58,10 +60,13 @@ const App: React.FC = () => {
                     </ProtectedRoute>
                 } />
                 <Route path={RoutesList.FEED} element={
-                        <FeedPage />
+                    <FeedPage />
                 } />
                 <Route path={RoutesList.DETAIL_FEED} element={
-                        3333
+                    <OrderInfoPage searchStore={'feed'} />
+                } />
+                <Route path={RoutesList.DETAIL_PROFILE_ORDERS} element={
+                    <OrderInfoPage searchStore={'orders'} />
                 } />
                 <Route path={RoutesList.PROFILE} element={
                     <ProtectedRoute>
@@ -70,9 +75,6 @@ const App: React.FC = () => {
                 }>
                     <Route path={RoutesList.PROFILE_ORDERS} element={
                         <OrdersPage />
-                    } />
-                    <Route path={RoutesList.DETAIL_PROFILE_ORDERS} element={
-                        22222
                     } />
                     <Route path={RoutesList.PROFILE} element={<ProfileForm />} />
                 </Route>
@@ -83,18 +85,19 @@ const App: React.FC = () => {
             {state?.backgroundLocation && (
                 <Routes>
                     <Route path={RoutesList.INGREDIENT_DETAIL} element={
-                        <Modal title="Детали ингредиента" closeModalHandle={() => navigate(-1)}>
+                        <Modal closeModalHandle={() => navigate(-1)}>
+                            <div className="text text_type_main-large">Детали ингредиента</div>
                             <IngredientsDetail />
                         </Modal>
                     } />
                     <Route path={RoutesList.DETAIL_FEED} element={
                         <Modal closeModalHandle={() => navigate(-1)}>
-                            111
+                            <OrderInfo searchStore={'feed'} />
                         </Modal>
                     } />
                     <Route path={RoutesList.DETAIL_PROFILE_ORDERS} element={
                         <Modal closeModalHandle={() => navigate(-1)}>
-                            2222
+                            <OrderInfo searchStore={'orders'} />
                         </Modal>
                     } />
                 </Routes>

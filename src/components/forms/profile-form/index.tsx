@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../../services/store";
 import Loader from "../../loader";
 import { updateUser } from "../../../services/profile/profile-slice";
 import formStyle from './style.module.sass';
-import { TUserUpdate } from "../../../services/profile/profile-slice/types";
+import { TUserUpdate } from "../../../services/profile/types";
 import { useForm } from "../../../hooks";
 
 const ProfileForm: React.FC = () => {

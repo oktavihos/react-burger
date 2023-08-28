@@ -1,5 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { TProfileState, TProfileResponse, TUserUpdate, TUser } from "./types";
+import { TProfileState, TProfileResponse, TUserUpdate, TUser } from "../types";
 import securityRequest from "../../../api/security-request";
 
 const InitialStateThunk = {

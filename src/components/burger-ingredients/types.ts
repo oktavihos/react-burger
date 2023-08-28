@@ -1,4 +1,4 @@
-import { TIngredient } from "../../services/ingredients/ingredients-slice/types";
+import { TIngredient } from "../../services/ingredients/types";
 
 export type TCategoriesData = {
     items: TIngredient[],
