@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { TRegisterData } from "../types";
+import { TRegisterData } from "./types";
 import request from "../../../api";
 import { TProfileResponse } from "../../profile/types";
 import { setData } from "../../profile/profile-slice";

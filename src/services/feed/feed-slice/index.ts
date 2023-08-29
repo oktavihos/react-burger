@@ -10,8 +10,8 @@ export const feedSlice = createSlice({
         wsInit: (state, action: PayloadAction<string>) => {
             return {...state, init: true};
         },
-        wsSendMessage: state => {
-            return state;
+        wsClose: () => {
+            return initialState;
         },
         onOpen: (state) => {
             return {...state, open: true};
@@ -28,6 +28,8 @@ export const feedSlice = createSlice({
     }
 });
 
-export const {wsInit, wsSendMessage, onOpen, onClose, onError, onMessage} = feedSlice.actions;
+export const {wsInit, wsClose, onOpen, onClose, onError, onMessage} = feedSlice.actions;
+
+export type TFeedActions = typeof feedSlice.actions;
 
 export default feedSlice.reducer;

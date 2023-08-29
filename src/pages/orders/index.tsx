@@ -1,6 +1,6 @@
 import Loader from "../../components/loader";
 import OrderList from "../../components/order-list"
-import { wsInit } from "../../services/orders/orders-slice";
+import { wsClose, wsInit } from "../../services/orders/orders-slice";
 import RoutesList from "../../services/routes";
 import { useAppDispatch, useAppSelector } from "../../services/store";
 import { useEffect } from 'react';
@@ -17,6 +17,7 @@ const OrdersPage: React.FC = () => {
 
     useEffect(() => {
         dispatch(wsInit("wss://norma.nomoreparties.space/orders"));
+        return () => { dispatch(wsClose()); }
     }, [dispatch]);
 
     return isLoading ? (

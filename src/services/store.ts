@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./root-reducer";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { feedSlice } from './feed/feed-slice';
+import { TFeedActions, feedSlice } from './feed/feed-slice';
 import { socketMiddleware } from "../middleware/socket-middleware";
-import { ordersSlice } from "./orders/orders-slice";
+import { TOrdersActions, ordersSlice } from "./orders/orders-slice";
 
 export const store = configureStore({
     reducer: rootReducer,
@@ -18,4 +18,4 @@ export type TAppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<TAppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export type TAppActions = typeof feedSlice.actions.onClose.name;
+export type TAppActions = TFeedActions | TOrdersActions;

@@ -1,51 +1,73 @@
-import type { AnyAction, Middleware, MiddlewareAPI } from 'redux';
+import type { Middleware, MiddlewareAPI } from 'redux';
 
-import { getCurrentTimestamp } from '../../utils/datetime';
 import { ACCESS_TOKEN_FIELD } from '../../config/api';
-import { RootState, TAppDispatch } from '../../services/store';
+import { RootState, TAppActions, TAppDispatch } from '../../services/store';
+import refreshToken from '../../api/refresh-token';
 
-export const socketMiddleware = (wsActions: any): Middleware => {
+export const socketMiddleware = (wsActions: TAppActions): Middleware => {
   return ((store: MiddlewareAPI<TAppDispatch, RootState>) => {
+
     let socket: WebSocket | null = null;
+    let reconnectTimeout: NodeJS.Timeout | null = null;
+    let wssUrl: string | null = null;
 
-    return next => (action: AnyAction) => {
-      const { dispatch } = store;
-      const { type } = action;
+    return next => (action) => {
 
-      const { wsInit, wsSendMessage, onOpen, onClose, onError, onMessage} = wsActions;
-      const token = localStorage.getItem(ACCESS_TOKEN_FIELD);
+        const { dispatch } = store;
+        const { wsInit, wsClose, onOpen, onClose, onError, onMessage} = wsActions;
+        const token = localStorage.getItem(ACCESS_TOKEN_FIELD);
 
-      if (type === wsInit.type) {
-        const url = action.payload + (token ? `?token=${token}` : '')
-        socket = new WebSocket(url);
-      }
-      if (socket) {
-        socket.onopen = () => {
-            dispatch(onOpen());
-        };
-
-        socket.onerror = () => {
-          dispatch(onError());
-        };
-
-        socket.onmessage = event => {
-          const { data } = event;
-          const parsedData: any = JSON.parse(data);
-          const { success, ...restParsedData } = parsedData;
-
-          dispatch(onMessage({ ...restParsedData, timestamp: getCurrentTimestamp() }));
-        };
-
-        socket.onclose = event => {
-          dispatch(onClose(event));
-        };
-
-        if (type === wsSendMessage.type) {
-          socket.send(JSON.stringify({...action.payload, token: token}));
+        if (wsInit.match(action)) {
+            if(reconnectTimeout) clearTimeout(reconnectTimeout)
+            wssUrl = action.payload;
+            const url = wssUrl + (token ? `?token=${token}` : '')
+            socket = new WebSocket(url);
         }
-      }
+        if (socket) {
+            socket.onopen = () => {
+                dispatch(onOpen());
+            };
 
-      next(action);
+            socket.onerror = () => {
+                dispatch(onError());
+            };
+
+            socket.onmessage = event => {
+                const { data } = event;
+                const parsedData = JSON.parse(data);
+
+                if (wssUrl && parsedData.message === "Invalid or missing token") {
+                    refreshToken().then(() => {
+                        const url = wssUrl + (token ? `?token=${token}` : '')
+                        dispatch(wsInit(url));
+                    }).catch(() => {
+                        dispatch(onError());
+                    });
+                    
+                    dispatch(wsClose());
+                    return;
+                };
+
+                const { success, ...restParsedData } = parsedData;
+                dispatch(onMessage(restParsedData));
+            };
+
+            socket.onclose = event => {
+                dispatch(onClose());
+                if(event.code === 1000){
+                    reconnectTimeout = setTimeout(() => {
+                        dispatch(wsInit(event.reason));
+                    }, 3000);
+                }
+            };
+
+            if (wsClose.match(action)) {
+                if(reconnectTimeout) clearTimeout(reconnectTimeout)
+                socket.close();
+            }
+        }
+
+        next(action);
     };
   }) as Middleware;
 };

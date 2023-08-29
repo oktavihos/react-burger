@@ -10,8 +10,8 @@ export const ordersSlice = createSlice({
         wsInit: (state, action: PayloadAction<string>) => {
             return {...state, init: true};
         },
-        wsSendMessage: state => {
-            return state;
+        wsClose: () => {
+            return initialState;
         },
         onOpen: (state) => {
             return {...state, open: true};
@@ -28,6 +28,8 @@ export const ordersSlice = createSlice({
     }
 });
 
-export const {wsInit, wsSendMessage, onOpen, onClose, onError, onMessage} = ordersSlice.actions;
+export const {wsInit, wsClose, onOpen, onClose, onError, onMessage} = ordersSlice.actions;
+
+export type TOrdersActions = typeof ordersSlice.actions;
 
 export default ordersSlice.reducer;

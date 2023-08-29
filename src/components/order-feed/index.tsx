@@ -4,18 +4,22 @@ import { TFeedProps } from './types';
 const OrderFeed: React.FC<TFeedProps> = ({total, totalDay, orderSuccess, orderWorks}) => {
     return (
         <div className='scroll pr-2'>
-            <div className={`${style.statusesContainer} mb-15`}>
+            <div className={`${style.statusesBlock} mb-15`}>
                 <div className={`${style.statusesWrapper} mr-9`}>
                     <div className='text text_type_main-medium mb-6'>Готовы:</div>
-                    {orderSuccess.map(item => (
-                        <p key={item} className={`text text_type_main-medium ${style.successItem}`}>{item}</p>
-                    ))}
+                    <div className={style.statusesContainer}>
+                        {orderSuccess.map(item => (
+                            <p key={item} className={`text text_type_main-medium ${style.successItem}`}>{item}</p>
+                        ))}
+                    </div>
                 </div>
                 <div className={style.statusesWrapper}>
                     <div className='text text_type_main-medium mb-6'>В работе:</div>
-                    {orderWorks.map(item => (
-                        <p key={item} className='text text_type_main-medium'>{item}</p>
-                    ))}
+                    <div className={style.statusesContainer}>
+                        {orderWorks.map(item => (
+                            <p key={item} className='text text_type_main-medium'>{item}</p>
+                        ))}
+                    </div>
                 </div>
             </div>
             <div className='mb-15'>

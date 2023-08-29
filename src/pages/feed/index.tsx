@@ -4,7 +4,7 @@ import OrderList from "../../components/order-list";
 import { useAppDispatch, useAppSelector } from "../../services/store";
 import MainTemplate from "../../templates/main";
 import feedStyle from "./style.module.sass";
-import { wsInit } from "../../services/feed/feed-slice";
+import { wsClose, wsInit } from "../../services/feed/feed-slice";
 import { EOrderStatuses } from "../../services/orders/types";
 import LoaderPage from "../../components/loader-page";
 import RoutesList from "../../services/routes";
@@ -20,12 +20,13 @@ const FeedPage: React.FC = () => {
 
     useEffect(() => {
         dispatch(wsInit("wss://norma.nomoreparties.space/orders/all"));
+        return () => { dispatch(wsClose()); }
     }, [dispatch]);
 
     const [orderWorks, orderSuccess] = useMemo(() => {
         return [
-            data?.orders.filter(item => item.status === EOrderStatuses.PENDING).slice(0, 5).map(item => item.number) ?? [],
-            data?.orders.filter(item => item.status === EOrderStatuses.DONE).slice(0, 5).map(item => item.number) ?? []
+            data?.orders.filter(item => item.status === EOrderStatuses.PENDING).map(item => item.number) ?? [],
+            data?.orders.filter(item => item.status === EOrderStatuses.DONE).slice(0, 15).map(item => item.number) ?? []
         ];
     }, [data])
     
