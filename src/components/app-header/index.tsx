@@ -1,6 +1,6 @@
 import { BurgerIcon, Logo, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import headerStyle from './style.module.sass';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import RoutesList from '../../services/routes';
 import { useAppSelector } from '../../services/store';
 
@@ -22,7 +22,9 @@ const AppHeader: React.FC = () => {
                     </NavLink>
                 </div>
                 <div className={headerStyle.logo}>
-                    <Logo />
+                    <Link to="/">
+                        <Logo />
+                    </Link>
                 </div>
                 <div className={headerStyle.headerRight}>
                     <NavLink to={RoutesList.PROFILE} className={`btn_icon btn_icon_primary pl-5 pr-5 pt-4 pb-4`}>

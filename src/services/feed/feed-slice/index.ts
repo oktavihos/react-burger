@@ -16,11 +16,11 @@ export const feedSlice = createSlice({
         onOpen: (state) => {
             return {...state, open: true};
         },
-        onClose: (state) => {
-            return {...state, open: false, isLoading: false};
+        onClose: () => {
+            return initialState;
         },
-        onError: (state) => {
-            return {...state, open: false, init: false, isLoading: false}
+        onError: (state, action: PayloadAction<string>) => {
+            return {...state, open: false, init: false, isLoading: false, error: action.payload}
         },
         onMessage: (state, action: PayloadAction<TResponseFeed>) => {
             return {...state, data: action.payload, isLoading: false}

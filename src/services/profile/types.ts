@@ -7,7 +7,7 @@ export type TProfileState = {
 };
 
 export type TProfileRequests = {
-    getUser: TRequestThunk,
+    getUser: TRequestThunk & {isGetUserInfo: boolean},
     updateUser: TRequestThunk
 };
 

@@ -24,7 +24,7 @@ const ProfilePage: React.FC = () => {
     return (
         <MainTemplate>
             <div className={`${pageStyle.container} loader-wrapper`}>
-                {isLoading ? <div className="loader-container"><Loader /></div> : ''}
+                {isLoading && <div className="loader-container"><Loader /></div>}
                 <div className={`${pageStyle.sidebar} mr-15 pt-20`}>
                     <ProfileNavigate logoutHandler={logoutHandler} />
                     <div className={`mt-20 text text_type_main-default ${pageStyle.description}`}>

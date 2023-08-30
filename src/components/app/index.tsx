@@ -22,6 +22,7 @@ import FeedPage from '../../pages/feed';
 import OrdersPage from '../../pages/orders';
 import OrderInfo from '../order-info';
 import OrderInfoPage from '../../pages/order-info';
+import FeedInfoPage from '../../pages/feed-info';
 
 const App: React.FC = () => {
 
@@ -63,10 +64,12 @@ const App: React.FC = () => {
                     <FeedPage />
                 } />
                 <Route path={RoutesList.DETAIL_FEED} element={
-                    <OrderInfoPage searchStore={'feed'} />
+                    <FeedInfoPage />
                 } />
                 <Route path={RoutesList.DETAIL_PROFILE_ORDERS} element={
-                    <OrderInfoPage searchStore={'orders'} />
+                    <ProtectedRoute>
+                        <OrderInfoPage />
+                    </ProtectedRoute>
                 } />
                 <Route path={RoutesList.PROFILE} element={
                     <ProtectedRoute>

@@ -1,6 +1,5 @@
 import type { Middleware, MiddlewareAPI } from 'redux';
 
-import { ACCESS_TOKEN_FIELD } from '../../config/api';
 import { RootState, TAppActions, TAppDispatch } from '../../services/store';
 import refreshToken from '../../api/refresh-token';
 
@@ -15,13 +14,11 @@ export const socketMiddleware = (wsActions: TAppActions): Middleware => {
 
         const { dispatch } = store;
         const { wsInit, wsClose, onOpen, onClose, onError, onMessage} = wsActions;
-        const token = localStorage.getItem(ACCESS_TOKEN_FIELD);
 
         if (wsInit.match(action)) {
             if(reconnectTimeout) clearTimeout(reconnectTimeout)
             wssUrl = action.payload;
-            const url = wssUrl + (token ? `?token=${token}` : '')
-            socket = new WebSocket(url);
+            socket = new WebSocket(wssUrl);
         }
         if (socket) {
             socket.onopen = () => {
@@ -29,7 +26,7 @@ export const socketMiddleware = (wsActions: TAppActions): Middleware => {
             };
 
             socket.onerror = () => {
-                dispatch(onError());
+                dispatch(onError("Произошла ошибка во время соединения"));
             };
 
             socket.onmessage = event => {
@@ -38,10 +35,9 @@ export const socketMiddleware = (wsActions: TAppActions): Middleware => {
 
                 if (wssUrl && parsedData.message === "Invalid or missing token") {
                     refreshToken().then(() => {
-                        const url = wssUrl + (token ? `?token=${token}` : '')
-                        dispatch(wsInit(url));
+                        if(wssUrl) dispatch(wsInit(wssUrl));
                     }).catch(() => {
-                        dispatch(onError());
+                        dispatch(onError("Произошла ошибка обновления токена"));
                     });
                     
                     dispatch(wsClose());
@@ -53,11 +49,12 @@ export const socketMiddleware = (wsActions: TAppActions): Middleware => {
             };
 
             socket.onclose = event => {
-                dispatch(onClose());
-                if(event.code === 1000){
+                if(event.code === 1000 && wssUrl){
                     reconnectTimeout = setTimeout(() => {
-                        dispatch(wsInit(event.reason));
+                        if(wssUrl) dispatch(wsInit(wssUrl));
                     }, 3000);
+                }else{
+                    dispatch(onClose());
                 }
             };
 

@@ -14,7 +14,7 @@ const initialState: TProfileState = {
         email: ''
     },
     requests: {
-        getUser: InitialStateThunk,
+        getUser: {...InitialStateThunk, isGetUserInfo: false},
         updateUser: InitialStateThunk,
     },
     isAuth: false
@@ -43,15 +43,21 @@ const profileSlice = createSlice({
         setData: (state, action: PayloadAction<TUser>) => {
             return {...state, user: action.payload, isAuth: true};
         },
-        reset: () => {
-            return initialState;
+        reset: (state) => {
+            return {
+                ...initialState, requests: {
+                    ...initialState.requests, getUser: {
+                        ...initialState.requests.getUser, isGetUserInfo: state.requests.getUser.isGetUserInfo
+                    }
+                }
+            };
         }
     },
     extraReducers: builder => {
         builder
         .addCase(getUser.fulfilled, (state, action) => ({
             ...state, user: action.payload, isAuth: true, requests: {
-                ...state.requests, getUser: initialState.requests.getUser
+                ...state.requests, getUser: {...initialState.requests.getUser, isGetUserInfo: true}
             }
         }))
         .addCase(getUser.pending, state => ({
@@ -64,7 +70,7 @@ const profileSlice = createSlice({
         .addCase(getUser.rejected, (state, action) => ({
             ...state, isAuth: false, requests: {
                 ...state.requests, getUser: {
-                    isLoading: false, isFailed: true, error: action.error.message
+                    isLoading: false, isFailed: true, error: action.error.message, isGetUserInfo: true
                 }
             }
         }))

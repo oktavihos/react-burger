@@ -4,16 +4,17 @@ import style from './style.module.sass';
 import { useParams } from "react-router-dom";
 import { TOrderInfoProps } from "./types";
 import { useAppSelector } from "../../services/store";
-import Loader from "../loader";
 import { StatusesLocale } from "../../services/orders/locale";
 import { getTimeToString } from "../../utils/datetime";
 import { useMemo } from "react";
 import { TIngredient } from "../../services/ingredients/types";
+import Loader from "../loader";
 
 const OrderInfo: React.FC<TOrderInfoProps> = ({searchStore}) => {
 
     const { id } = useParams();
     const order = useAppSelector(store => store[searchStore].data?.orders.find(item => item._id === id));
+    const isLoading = useAppSelector(store => store[searchStore].isLoading);
     const storeIngredients = useAppSelector(store => store.ingredients.data);
 
     const [total, uniqueIngredients] = useMemo(() => {
@@ -37,7 +38,9 @@ const OrderInfo: React.FC<TOrderInfoProps> = ({searchStore}) => {
         return [total, uniqueIngredients];
     }, [order?.ingredients, storeIngredients]);
 
-    return !order ? <Loader /> : (
+    return isLoading ? <div className={style.loader}><Loader /></div> : (!order ? (
+            <p className={`text text_type_digits-default text-center`}>Заказ не найден</p>
+        ) : (
         <div className={style.container}>
             <p className={`${style.orderTitle} text text_type_digits-default text-center`}>#{order.number}</p>
             <p className="text text_type_main-medium mt-10">{order.name}</p>
@@ -56,7 +59,7 @@ const OrderInfo: React.FC<TOrderInfoProps> = ({searchStore}) => {
                 </div>
             </div>
         </div>
-    );
+    ));
 }
 
 export default OrderInfo;
