@@ -6,7 +6,7 @@ import RoutesList from "./routes";
 
 const ProtectedRoute: React.FC<{children: React.ReactElement, onlyUnAuth?: boolean}> = ({children, onlyUnAuth = false}) => {
 
-    const { isLoading } = useAppSelector(state => state.profile.requests.getUser);
+    const { isLoading, isGetUserInfo } = useAppSelector(state => state.profile.requests.getUser);
     const isAuth = useAppSelector(state => state.profile.isAuth);
     const location = useLocation();
 
@@ -15,11 +15,11 @@ const ProtectedRoute: React.FC<{children: React.ReactElement, onlyUnAuth?: boole
         return <Navigate to={from} />
     }
 
-    if(!onlyUnAuth && !isAuth){
+    if(!onlyUnAuth && !isAuth && isGetUserInfo){
         return <Navigate to={RoutesList.LOGIN} replace state={{from: location}} />
     }
 
-    return isLoading ? <LoaderPage /> : children;
+    return (isLoading || !isGetUserInfo) ? <LoaderPage /> : children;
 }
 
 export default ProtectedRoute;

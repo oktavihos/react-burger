@@ -1,0 +1,38 @@
+.row
+    display: flex
+    justify-content: space-between
+    align-items: center
+    width: 100%
+.priceContainer
+    display: flex
+    align-items: center
+.item
+    max-width: 100%
+    cursor: pointer
+    &:last-child
+        margin-bottom: 0px
+.imgCircleContainer
+    display: flex
+.imgCircle
+    composes: global(imgCircle)
+    z-index: 7
+    span
+        position: absolute
+        z-index: 3
+        top: 2px
+        left: 2px
+        width: 60px
+        height: 60px
+        display: flex
+        align-items: center
+        justify-content: center
+        &+img
+            opacity: 0.7
+    @for $i from 2 through 6
+        &:nth-child(#{$i})
+            margin-left: -15px
+            z-index: #{7 - $i}
+.done
+    color: var(--colors-interface-success)
+.cancel
+    color: var(--colors-interface-error)

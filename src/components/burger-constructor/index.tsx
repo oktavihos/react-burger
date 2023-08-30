@@ -3,12 +3,12 @@ import { useCallback, useMemo, useState } from "react";
 import constructorStyle from './style.module.sass';
 import OrderDetails from "../order-details";
 import { useAppDispatch, useAppSelector } from "../../services/store";
-import { TOrderItems } from "../../services/constructor/constructor-slice/type";
+import { TOrderItems } from "../../services/constructor/type";
 import { addIngredient, deleteIngredient, resetConstructor, sendOrder } from "../../services/constructor/constructor-slice";
 import { decrementIngredient, incrementIngredient, resetIngredients } from "../../services/ingredients/ingredients-slice";
 import { useDrop } from "react-dnd";
 import { v4 as uuidv4 } from 'uuid';
-import { TIngredient } from "../../services/ingredients/ingredients-slice/types";
+import { TIngredient } from "../../services/ingredients/types";
 import ConstructorDragItem from "./components/drag-item";
 import EmptyItem from "./components/empty-item";
 import { EmptyItemTypes } from "./components/empty-item/types";
@@ -37,7 +37,8 @@ const BurgerConstructor: React.FC = () => {
 
         if(bun){
             total += bun.price * 2;
-            orderItems.ingredients.push(bun._id, bun._id);
+            orderItems.ingredients.unshift(bun._id);
+            orderItems.ingredients.push(bun._id);
         }
 
         return [total, orderItems];
@@ -79,12 +80,14 @@ const BurgerConstructor: React.FC = () => {
     return (
         <>
             {open && (
-                <Modal extraClass={constructorStyle.modal} closeModalHandle={closeModalHandle}>
-                    {!order ? (
-                        <>
-                            {error ? <div className={constructorStyle.error}>{error}</div> : <Loader />}
-                        </>
-                    ) : <OrderDetails data={order} />}
+                <Modal closeModalHandle={closeModalHandle}>
+                    <div className={constructorStyle.modal}>
+                        {!order ? (
+                            <>
+                                {error ? <div className={constructorStyle.error}>{error}</div> : <Loader />}
+                            </>
+                        ) : <OrderDetails data={order} />}
+                    </div>
                 </Modal>
             )}
             <div style={{}} ref={dropTarget} className={`${constructorStyle.currentList} mb-25`}>

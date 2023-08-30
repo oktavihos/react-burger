@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../../services/store";
 import Loader from "../../loader";
 import { loginFetch } from "../../../services/auth/auth-slice";
 import RoutesList from "../../../services/routes";
-import { TUserData } from "../../../services/auth/auth-slice/types";
+import { TUserData } from "../../../services/auth/types";
 import { useForm } from "../../../hooks";
 
 const initialStateLogin: TUserData = {email: '', password: ''};

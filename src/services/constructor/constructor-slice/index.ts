@@ -1,5 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { TConstructorIngredient, TConstructorState, TOrderData, TOrderItems, TSortPayload } from "./type";
+import { TConstructorIngredient, TConstructorState, TOrderData, TOrderItems, TSortPayload } from "../type";
 import { BurgerTypes } from "../../../global.types";
 import securityRequest from "../../../api/security-request";
 

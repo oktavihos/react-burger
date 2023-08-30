@@ -5,7 +5,7 @@ import modalStyle from './style.module.sass';
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useCallback, useEffect } from "react";
 
-const Modal: React.FC<TModalProps> = ({title = '', children, closeModalHandle = () => {}, extraClass}) => {
+const Modal: React.FC<TModalProps> = ({children, closeModalHandle = () => {}, maxWidth}) => {
     const modalRoot = document.querySelector('#modals');
 
     const handleEscapePress = useCallback((event: KeyboardEvent) => {
@@ -19,15 +19,16 @@ const Modal: React.FC<TModalProps> = ({title = '', children, closeModalHandle = 
         return () => document.removeEventListener('keydown', handleEscapePress);
     }, [handleEscapePress])
 
+    const styleModal = {
+        ...(maxWidth && {maxWidth: maxWidth})
+    };
+
     return <>
         {modalRoot && createPortal(
             <ModalOverlay closeModalHandle={closeModalHandle}>
-                <div className={`${modalStyle.modal} pt-10 pr-10 pl-10 pb-15`}>
-                    <div className={`${modalStyle.modalHeader}`}>
-                        <span className="text text_type_main-large">{title}</span>
-                        <span className={modalStyle.close}><CloseIcon onClick={() => closeModalHandle()} type="primary" /></span>
-                    </div>
-                    <div className={`${extraClass ? ` ${extraClass}` : ''}`}>{children}</div>
+                <div className={`${modalStyle.modal} pt-10 pr-10 pl-10 pb-15`} style={styleModal}>
+                    <div className={modalStyle.close}><CloseIcon onClick={() => closeModalHandle()} type="primary" /></div>
+                    {children}
                 </div>
             </ModalOverlay>
         , modalRoot)}

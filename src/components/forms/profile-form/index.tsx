@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../../services/store";
 import Loader from "../../loader";
 import { updateUser } from "../../../services/profile/profile-slice";
 import formStyle from './style.module.sass';
-import { TUserUpdate } from "../../../services/profile/profile-slice/types";
+import { TUserUpdate } from "../../../services/profile/types";
 import { useForm } from "../../../hooks";
 
 const ProfileForm: React.FC = () => {
@@ -26,7 +26,7 @@ const ProfileForm: React.FC = () => {
     }
 
     return (
-        <form onSubmit={submitHandler}>
+        <form onSubmit={submitHandler} className="pt-20">
             <div className="loader-wrapper">
                 {isLoading && <div className="loader-container"><Loader /></div>}
                 <Input

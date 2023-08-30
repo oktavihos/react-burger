@@ -1,6 +1,5 @@
 export type TModalProps = {
-    children?: React.ReactElement | React.ReactElement[],
-    title?: string,
+    children: React.ReactNode
     closeModalHandle?: () => void,
-    extraClass?: string
+    maxWidth?: string
 };

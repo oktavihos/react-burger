@@ -1,3 +1,3 @@
 export type TMainTemplateProps = {
-    children?: React.ReactElement | React.ReactElement[]
+    children: React.ReactNode
 }

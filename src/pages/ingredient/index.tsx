@@ -5,7 +5,7 @@ import pageStyle from './style.module.sass';
 const IngredientPage: React.FC = () => {
     return (
         <MainTemplate>
-            <div className={`${pageStyle.container} mt-30`}>
+            <div className={`${pageStyle.container} pt-20`}>
                 <IngredientsDetail />
             </div>
         </MainTemplate>

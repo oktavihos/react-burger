@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { TForgotPasswordData } from "./types";
+import { TForgotPasswordData } from "../types";
 import { TResponseResultMessage } from "../../../api/types";
 import request from "../../../api";
 import { TRequestThunk } from "../../../global.types";

@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { TUserData, TInitialStateLogin } from "./types";
+import { TUserData, TInitialStateLogin } from "../types";
 import request from "../../../api";
 import { TResponseResultMessage } from "../../../api/types";
-import { TProfileResponse } from "../../profile/profile-slice/types";
+import { TProfileResponse } from "../../profile/types";
 import { setData } from "../../profile/profile-slice";
 import { ACCESS_TOKEN_FIELD, REFRESH_TOKEN_FIELD } from "../../../config/api";
 
@@ -21,8 +21,13 @@ export const loginFetch = createAsyncThunk(
     "auth/loginFetch",
     async (data: TUserData, { dispatch }) => {
         const result = await request<TProfileResponse>('auth/login', 'POST', data);
-        localStorage.setItem(ACCESS_TOKEN_FIELD, result.accessToken);
-        localStorage.setItem(REFRESH_TOKEN_FIELD, result.refreshToken);
+
+        const accessToken = result.accessToken.split('Bearer ')[1];
+        const refreshToken = result.refreshToken;
+
+        localStorage.setItem(ACCESS_TOKEN_FIELD, accessToken);
+        localStorage.setItem(REFRESH_TOKEN_FIELD, refreshToken);
+
         dispatch(setData(result.user));
         return result.user;
     }
@@ -31,7 +36,7 @@ export const loginFetch = createAsyncThunk(
 export const logoutFetch = createAsyncThunk(
     "auth/logoutFetch",
     async () => {
-        const refreshToken = localStorage.getItem("refreshToken");
+        const refreshToken = localStorage.getItem(REFRESH_TOKEN_FIELD);
         const result = await request<TResponseResultMessage>('auth/logout', 'POST', {token: refreshToken});
         localStorage.removeItem(ACCESS_TOKEN_FIELD);
         localStorage.removeItem(REFRESH_TOKEN_FIELD);

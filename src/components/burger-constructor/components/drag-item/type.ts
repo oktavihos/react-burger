@@ -1,4 +1,4 @@
-import { TConstructorIngredient } from "../../../../services/constructor/constructor-slice/type"
+import { TConstructorIngredient } from "../../../../services/constructor/type"
 
 export type TConstructorDragItem = {
     index: number
