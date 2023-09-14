@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { TFeedInitialState, TResponseFeed } from "../types";
 
-const initialState: TFeedInitialState = {data: null, open: false, init: false, isLoading: true};
+export const initialState: TFeedInitialState = {data: null, open: false, init: false, isLoading: true};
 
 export const feedSlice = createSlice({
     name: 'feed',
@@ -20,7 +20,7 @@ export const feedSlice = createSlice({
             return initialState;
         },
         onError: (state, action: PayloadAction<string>) => {
-            return {...state, open: false, init: false, isLoading: false, error: action.payload}
+            return {...state, open: false, data: null, init: false, isLoading: false, error: action.payload}
         },
         onMessage: (state, action: PayloadAction<TResponseFeed>) => {
             return {...state, data: action.payload, isLoading: false}

@@ -27,7 +27,7 @@ const Modal: React.FC<TModalProps> = ({children, closeModalHandle = () => {}, ma
         {modalRoot && createPortal(
             <ModalOverlay closeModalHandle={closeModalHandle}>
                 <div className={`${modalStyle.modal} pt-10 pr-10 pl-10 pb-15`} style={styleModal}>
-                    <div className={modalStyle.close}><CloseIcon onClick={() => closeModalHandle()} type="primary" /></div>
+                    <div data-area="close-modal" className={modalStyle.close}><CloseIcon onClick={() => closeModalHandle()} type="primary" /></div>
                     {children}
                 </div>
             </ModalOverlay>

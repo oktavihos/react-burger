@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { TOrdersInitialState, TResponseOrders } from "../types";
 
-const initialState: TOrdersInitialState = {data: null, open: false, init: false, isLoading: true};
+export const initialState: TOrdersInitialState = {data: null, open: false, init: false, isLoading: true};
 
 export const ordersSlice = createSlice({
     name: 'orders',
@@ -20,7 +20,7 @@ export const ordersSlice = createSlice({
             return initialState;
         },
         onError: (state, action: PayloadAction<string>) => {
-            return {...state, open: false, init: false, isLoading: false, error: action.payload}
+            return {...state, open: false, data: null, init: false, isLoading: false, error: action.payload}
         },
         onMessage: (state, action: PayloadAction<TResponseOrders>) => {
             return {...state, data: action.payload, isLoading: false}
