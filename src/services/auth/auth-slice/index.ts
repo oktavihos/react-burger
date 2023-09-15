@@ -3,7 +3,7 @@ import { TUserData, TInitialStateLogin } from "../types";
 import request from "../../../api";
 import { TResponseResultMessage } from "../../../api/types";
 import { TProfileResponse } from "../../profile/types";
-import { setData } from "../../profile/profile-slice";
+import { setData, reset } from "../../profile/profile-slice";
 import { ACCESS_TOKEN_FIELD, REFRESH_TOKEN_FIELD } from "../../../config/api";
 
 const InitialStateThunk = {
@@ -35,11 +35,12 @@ export const loginFetch = createAsyncThunk(
 
 export const logoutFetch = createAsyncThunk(
     "auth/logoutFetch",
-    async () => {
+    async (_, { dispatch }) => {
         const refreshToken = localStorage.getItem(REFRESH_TOKEN_FIELD);
         const result = await request<TResponseResultMessage>('auth/logout', 'POST', {token: refreshToken});
         localStorage.removeItem(ACCESS_TOKEN_FIELD);
         localStorage.removeItem(REFRESH_TOKEN_FIELD);
+        dispatch(reset());
         return result;
     }
 );

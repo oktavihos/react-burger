@@ -6,7 +6,7 @@ import Loader from "../../loader";
 import { registerFetch } from "../../../services/register/register-slice";
 import RoutesList from "../../../services/routes";
 import { useForm } from "../../../hooks";
-import { TRegisterData } from "../../../services/register/register-slice/types";
+import { TRegisterData } from "../../../services/register/types";
 
 const initialStateRegister: TRegisterData = {
     name: '', email: '', password: ''

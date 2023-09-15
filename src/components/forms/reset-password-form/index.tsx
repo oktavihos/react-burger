@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../../services/store";
 import Loader from "../../loader";
 import { resetPasswordFetch } from "../../../services/reset-password/reset-password-slice";
 import RoutesList from "../../../services/routes";
-import { TResetPasswordData } from "../../../services/reset-password/reset-password-slice/types";
+import { TResetPasswordData } from "../../../services/reset-password/types";
 import { useForm } from "../../../hooks";
 
 const initialStateResetPassword: TResetPasswordData = {

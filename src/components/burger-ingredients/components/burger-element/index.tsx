@@ -27,7 +27,7 @@ const BurgerElement: React.FC<TBurgerElementProps> = React.memo(({data}) => {
 
     return (
         <>
-            <div style={{opacity}} draggable ref={dragRef} className={`${elementStyle.card}`} onClick={() => selectIngredientHandle()}>
+            <div data-area="drag" style={{opacity}} draggable ref={dragRef} className={`${elementStyle.card}`} onClick={() => selectIngredientHandle()}>
                 {data.count ? <Counter count={data.count} size="default" extraClass="m-1" /> : undefined}
                 <div className="pl-4 pr-4"><img alt={data.name} src={data.image} /></div>
                 <div className={`${elementStyle.price} mt-1 mb-1`}>

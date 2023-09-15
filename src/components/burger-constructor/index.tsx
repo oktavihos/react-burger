@@ -90,7 +90,7 @@ const BurgerConstructor: React.FC = () => {
                     </div>
                 </Modal>
             )}
-            <div style={{}} ref={dropTarget} className={`${constructorStyle.currentList} mb-25`}>
+            <div style={{}} ref={dropTarget} data-area="drop" className={`${constructorStyle.currentList} mb-25`}>
                 {bun ? <ConstructorElement
                     extraClass="ml-7"
                     type="top"
@@ -120,7 +120,7 @@ const BurgerConstructor: React.FC = () => {
             <div className={constructorStyle.total}>
                 <span className={`${constructorStyle.price} text text_type_digits-medium`}>{total}</span>
                 <CurrencyIcon type="primary" />
-                <Button onClick={submitOrderHandle} extraClass="ml-10" htmlType="button" type="primary" size="medium">
+                <Button data-area="send-order" onClick={submitOrderHandle} extraClass="ml-10" htmlType="button" type="primary" size="medium">
                     Оформить заказ
                 </Button>
             </div>

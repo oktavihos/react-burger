@@ -8,7 +8,7 @@ const InitialStateThunk = {
     error: undefined
 };
 
-const initialState: TProfileState = {
+export const initialState: TProfileState = {
     user: {
         name: '', 
         email: ''
